@@ -35,6 +35,7 @@ import '../Style/main.scss';
 injectTapEventPlugin();
 
 import data from '../data.json';
+import jsMindmap from '../JavaScript.json';
 import {AppBar, Paper, BottomNavigation, BottomNavigationItem, FontIcon} from 'material-ui';
 import * as colors from 'material-ui/styles/colors';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -108,6 +109,7 @@ class Tree extends React.Component{
   renderNode(node){
     if(node.ideas){
       return <ul>
+        <h2>{node.title}</h2>
         {
           Object.keys(node.ideas).map((key)=>{
             <li>{node.ideas[key].title}</li>
@@ -168,9 +170,9 @@ const Menu = ({
   let branchitStore = new Branchit();
 
   //change the tree to Ideas so we can track any changes to this tree
-  traverse(data);
+  traverse(jsMindmap);
 
-  branchitStore.ideaList = data.ideas;
+  branchitStore.ideaList = jsMindmap.ideas;
 
   function traverse(idea){
     let ideas = idea.ideas;
