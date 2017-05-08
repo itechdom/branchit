@@ -4,13 +4,13 @@ import superagent from 'superagent';
 import {HOST} from  "../.config.js";
 
 export class Branchit {
-  @observable ideaList;
+  @observable ideaList = [];
   @observable level;
   @observable maxLevel;
   minLevel;
 
   constructor(){
-    this.ideaList = [];
+    this.ideaList;
     this.level = 1;
   }
 
