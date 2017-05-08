@@ -92,12 +92,12 @@ const muiTheme = getMuiTheme({
             changeRoute={(index)=>index = 0}
           />
           <RaisedButton
-            label={"+"}
-            onClick={()=>{this.props.store.incrementLevel()}}
-          />
-          <RaisedButton
             label={"-"}
             onClick={()=>{this.props.store.decremenetLevel()}}
+          />
+          <RaisedButton
+            label={"+"}
+            onClick={()=>{this.props.store.incrementLevel()}}
           />
           <Tree
             nodeList={this.props.store.ideaList}
@@ -120,7 +120,7 @@ class Tree extends React.Component{
     let visible = visibleLevel <= level;
     if(node.ideas){
       return <div>
-        {(visible)?node.title:""}
+        {(visible)?<Node title={node.title} />:""}
         <ul style={(visible)?{}:{padding:'0px'}}>
           {
             Object.keys(node.ideas).map((key)=>{
@@ -130,7 +130,10 @@ class Tree extends React.Component{
         </ul>
       </div>
     }
-    return <li>{(visible)?node.title:""}</li>;
+    if(visible){
+      return <Node title={node.title} />;
+    }
+    return "";
   }
   render(){
     return <div>
@@ -143,6 +146,22 @@ class Tree extends React.Component{
     }
   </div>
 }
+}
+
+class Node extends React.Component{
+  constructor(props){
+    super(props);
+  }
+
+  testHtml(title){
+    var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+    var regex = new RegExp(expression);
+    return title.match(regex);
+  }
+
+  render(){
+    return <p style={{fontSize:24}}>{(!this.testHtml(this.props.title))?this.props.title:<a target="_blank" href={this.props.title}>{this.props.title}</a>}</p>;
+  }
 }
 
 const Footer = () => (
