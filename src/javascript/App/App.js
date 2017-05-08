@@ -44,8 +44,6 @@ import {
 }
 from 'material-ui/utils/colorManipulator';
 
-import Tree from '../mindmap/Components/Tree';
-
 const muiTheme = getMuiTheme({
   fontFamily: 'Roboto,sans-serif',
   palette: {
@@ -92,6 +90,9 @@ const muiTheme = getMuiTheme({
             selectedRoute={0}
             changeRoute={(index)=>index = 0}
           />
+          <Tree
+            nodeList={this.props.store.ideaList}
+          />
           <DevTools />
           <Footer/>
         </div>
@@ -99,6 +100,33 @@ const muiTheme = getMuiTheme({
     );
   }
 };
+
+class Tree extends React.Component{
+  constructor(props){
+    super(props);
+  }
+  renderNode(node){
+    if(node.ideas){
+      return <ul>
+        {
+          Object.keys(node.ideas).map((key)=>{
+            <li>{node.ideas[key].title}</li>
+            return this.renderNode(node.ideas[key]);
+          })
+        }
+      </ul>
+    }
+    return <li>{node.title}</li>;
+  }
+  render(){
+    return <div>
+      {Object.keys(this.props.nodeList).map((key)=>{
+        return this.renderNode(this.props.nodeList[key]);
+      })
+    }
+    </div>
+  }
+}
 
 const Footer = () => (
   <footer style={{marginTop:'4em', padding:'2em',textAlign:'center',backgroundColor:colors.grey300}}>
@@ -132,7 +160,7 @@ const Menu = ({
           data-route="/progress"
           onTouchTap={() => changeRoute(2)}
         />
-        </BottomNavigation>
+      </BottomNavigation>
     </Paper>
   );
 

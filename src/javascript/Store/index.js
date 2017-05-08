@@ -16,11 +16,13 @@ export class Idea {
   attr;
   style;
   ideas;
+  visible;
   constructor(obj){
     let cp = Object.assign({},obj);
     this.id = cp.id;
     this.title = cp.title;
     this.ideas = cp.ideas;
     this.style = cp.style;
+    this.visible = true;
   }
 }
