@@ -36,7 +36,7 @@ injectTapEventPlugin();
 
 import data from '../data.json';
 import jsMindmap from '../JavaScript.json';
-import {AppBar, Paper, BottomNavigation, BottomNavigationItem, FontIcon} from 'material-ui';
+import {AppBar, RaisedButton, Chip, Paper, BottomNavigation, BottomNavigationItem, FontIcon} from 'material-ui';
 import * as colors from 'material-ui/styles/colors';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -91,8 +91,17 @@ const muiTheme = getMuiTheme({
             selectedRoute={0}
             changeRoute={(index)=>index = 0}
           />
+          <RaisedButton
+            label={"+"}
+            onClick={()=>{this.props.store.incrementLevel()}}
+          />
+          <RaisedButton
+            label={"-"}
+            onClick={()=>{this.props.store.decremenetLevel()}}
+          />
           <Tree
             nodeList={this.props.store.ideaList}
+            level={this.props.store.level}
           />
           <DevTools />
           <Footer/>
@@ -106,27 +115,29 @@ class Tree extends React.Component{
   constructor(props){
     super(props);
   }
-  renderNode(node){
+  renderNode(node,level,visibleLevel){
+    level++;
+    let visible = visibleLevel <= level;
     if(node.ideas){
       return <div>
-        {node.title}
-        <ul>
+        {(visible)?node.title:""}
+        <ul style={(visible)?{}:{padding:'0px'}}>
           {
             Object.keys(node.ideas).map((key)=>{
-              return this.renderNode(node.ideas[key]);
+              return this.renderNode(node.ideas[key],level,visibleLevel);
             })
           }
         </ul>
       </div>
     }
-    return <li>{node.title}</li>;
+    return <li>{(visible)?node.title:""}</li>;
   }
   render(){
     return <div>
       {Object.keys(this.props.nodeList).map((key)=>{
         return <div>
           <h1>{this.props.nodeList[key].title}</h1>
-          {this.renderNode(this.props.nodeList[key])}
+          {this.renderNode(this.props.nodeList[key],0,this.props.level)}
         </div>
       })
     }
