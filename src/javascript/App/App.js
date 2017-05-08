@@ -108,26 +108,30 @@ class Tree extends React.Component{
   }
   renderNode(node){
     if(node.ideas){
-      return <ul>
-        <h2>{node.title}</h2>
-        {
-          Object.keys(node.ideas).map((key)=>{
-            <li>{node.ideas[key].title}</li>
-            return this.renderNode(node.ideas[key]);
-          })
-        }
-      </ul>
+      return <div>
+        {node.title}
+        <ul>
+          {
+            Object.keys(node.ideas).map((key)=>{
+              return this.renderNode(node.ideas[key]);
+            })
+          }
+        </ul>
+      </div>
     }
     return <li>{node.title}</li>;
   }
   render(){
     return <div>
       {Object.keys(this.props.nodeList).map((key)=>{
-        return this.renderNode(this.props.nodeList[key]);
+        return <div>
+          <h1>{this.props.nodeList[key].title}</h1>
+          {this.renderNode(this.props.nodeList[key])}
+        </div>
       })
     }
-    </div>
-  }
+  </div>
+}
 }
 
 const Footer = () => (
