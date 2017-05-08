@@ -8,7 +8,7 @@ export default class Tree extends React.Component{
     componentDidMount(){
 
     }
-    
+
     renderNodes(arr) {
         return arr.map((ch, index) => (
             <Node
@@ -17,7 +17,7 @@ export default class Tree extends React.Component{
             />
         ))
     }
-    
+
     render(){
         let level = 0;
         let arr =[];
@@ -28,7 +28,7 @@ export default class Tree extends React.Component{
             <div>
             {
                 this.renderNodes(arr)
-            }  
+            }
             </div>
         );
 

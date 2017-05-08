@@ -6,7 +6,8 @@ import {
 from "mobx-react";
 import Dropzone from 'react-dropzone';
 import {
-  Branchit
+  Branchit,
+  Idea
 }
 from '../Store';
 
@@ -33,6 +34,7 @@ import '../Style/main.scss';
 
 injectTapEventPlugin();
 
+import data from '../data.json';
 import {AppBar, Paper, BottomNavigation, BottomNavigationItem, FontIcon} from 'material-ui';
 import * as colors from 'material-ui/styles/colors';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -41,6 +43,8 @@ import {
   fade
 }
 from 'material-ui/utils/colorManipulator';
+
+import Tree from '../mindmap/Components/Tree';
 
 const muiTheme = getMuiTheme({
   fontFamily: 'Roboto,sans-serif',
@@ -71,10 +75,6 @@ const muiTheme = getMuiTheme({
 
   constructor(props){
     super(props);
-    this.state = {
-      deleteExpenseDialogOpen:false,
-      editExpenseDialogOpen:false
-    }
   }
 
   render() {
@@ -137,11 +137,27 @@ const Menu = ({
   );
 
 
-  let userStore = new Branchit();
+  let branchitStore = new Branchit();
+
+  //change the tree to Ideas so we can track any changes to this tree
+  traverse(data);
+
+  branchitStore.ideaList = data.ideas;
+
+  function traverse(idea){
+    let ideas = idea.ideas;
+    if(ideas){
+      Object.keys(ideas).map((key)=>{
+        //do the switching here ...
+        ideas[key] = new Idea(ideas[key])
+        traverse(ideas[key]);
+      });
+    }
+  }
 
   ReactDOM.render(
     <IntlProvider locale="en">
-      <App userStore={userStore} />
+      <App store={branchitStore} />
     </IntlProvider>,
     document.getElementById('app')
   );
