@@ -8,17 +8,26 @@ export class Branchit {
   @observable level;
   @observable maxLevel;
   minLevel;
+
   constructor(){
     this.ideaList = [];
     this.level = 1;
   }
+
   @action incrementLevel(){
     this.level++;
   }
+
   @action decremenetLevel(){
     if(this.level !== 1){
       return this.level--;
     }
+  }
+
+  @action toggleChildVisible(node){
+    node.visible = !node.visible;
+    this.level--;
+    this.level++;
   }
 }
 
@@ -28,14 +37,12 @@ export class Idea {
   attr;
   style;
   ideas;
-  visible;
-
+  @observable visible;
   constructor(obj){
-    let cp = Object.assign({},obj);
-    this.id = cp.id;
-    this.title = cp.title;
-    this.ideas = cp.ideas;
-    this.style = cp.style;
+    this.id = obj.id;
+    this.title = obj.title;
+    this.ideas = obj.ideas;
+    this.style = obj.style;
     this.visible = true;
   }
 }

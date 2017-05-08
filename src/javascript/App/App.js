@@ -102,6 +102,7 @@ const muiTheme = getMuiTheme({
           <Tree
             nodeList={this.props.store.ideaList}
             level={this.props.store.level}
+            handleNodeToggle={(node)=>{this.props.store.toggleChildVisible(node)}}
           />
           <DevTools />
           <Footer/>
@@ -112,29 +113,44 @@ const muiTheme = getMuiTheme({
 };
 
 class Tree extends React.Component{
+
   constructor(props){
     super(props);
   }
+
   renderNode(node,level,visibleLevel){
     level++;
     let visible = visibleLevel <= level;
     if(node.ideas){
       return <div>
-        {(visible)?<Node title={node.title} />:""}
-        <ul style={(visible)?{}:{padding:'0px'}}>
-          {
-            Object.keys(node.ideas).map((key)=>{
-              return this.renderNode(node.ideas[key],level,visibleLevel);
-            })
-          }
-        </ul>
+        {
+          (visible)?<Node
+            title={node.title}
+            visible={node.visible}
+            handleNodeToggle={()=>this.props.handleNodeToggle(node)}
+          />:""
+        }
+        {
+          (node.visible)?<ul style={(visible)?{}:{padding:'0px'}}>
+            {
+              Object.keys(node.ideas).map((key)=>{
+                return this.renderNode(node.ideas[key],level,visibleLevel);
+              })
+            }
+          </ul>:""
+        }
       </div>
     }
     if(visible){
-      return <Node title={node.title} />;
+      return <Node
+        title={node.title}
+        visible={node.visible}
+        handleNodeToggle={()=>this.props.handleNodeToggle(node)}
+      />;
     }
     return "";
   }
+
   render(){
     return <div>
       {Object.keys(this.props.nodeList).map((key)=>{
@@ -159,7 +175,7 @@ class Node extends React.Component{
   }
 
   render(){
-    return <p style={{fontSize:24}}>{(!this.testHtml(this.props.title))?this.props.title:<a target="_blank" href={this.props.title}>{this.props.title}</a>}</p>;
+    return <p style={{fontSize:24}}>{(this.props.visible)?<RaisedButton onClick={this.props.handleNodeToggle} label="-" />:<RaisedButton onClick={this.props.handleNodeToggle} label="+" />}{(!this.testHtml(this.props.title))?this.props.title:<a target="_blank" href={this.props.title}>{this.props.title}</a>}</p>;
   }
 }
 
