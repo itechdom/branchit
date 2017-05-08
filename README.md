@@ -1,2 +1,2 @@
-# BudgetQT
-My personal budgeting app
+# Branchit
+My personal Learning app
