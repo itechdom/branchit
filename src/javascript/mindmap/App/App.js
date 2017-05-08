@@ -28,7 +28,7 @@ export default class App extends React.Component {
     render() {
         return (
         <div className="board">
-            <Tree 
+            <Tree
                 onPositionChange
                 nodes={this.state.mindmap}
             />
@@ -39,7 +39,3 @@ export default class App extends React.Component {
         );
     }
 }
-ReactDOM.render(
-    React.createElement(App),
-    document.getElementById('app')
-);
