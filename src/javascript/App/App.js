@@ -139,7 +139,6 @@ class Tree extends React.Component{
     return <div>
       {Object.keys(this.props.nodeList).map((key)=>{
         return <div>
-          <h1>{this.props.nodeList[key].title}</h1>
           {this.renderNode(this.props.nodeList[key],0,this.props.level)}
         </div>
       })
