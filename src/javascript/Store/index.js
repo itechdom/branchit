@@ -37,12 +37,12 @@ export class Idea {
   attr;
   style;
   ideas;
-  @observable visible;
+  @observable visible = false;
   constructor(obj){
     this.id = obj.id;
     this.title = obj.title;
     this.ideas = obj.ideas;
     this.style = obj.style;
-    this.visible = true;
+    this.visible = false;
   }
 }

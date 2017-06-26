@@ -36,7 +36,7 @@ injectTapEventPlugin();
 
 import data from '../Self.json';
 import jsMindmap from '../JavaScript.json';
-import {AppBar, RaisedButton, Chip, Paper, BottomNavigation, BottomNavigationItem, FontIcon} from 'material-ui';
+import {AppBar, RaisedButton, Chip, Paper, BottomNavigation, BottomNavigationItem, FontIcon, IconButton} from 'material-ui';
 import * as colors from 'material-ui/styles/colors';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -175,7 +175,20 @@ class Node extends React.Component{
   }
 
   render(){
-    return <p style={{fontSize:24}}>{(this.props.visible)?<RaisedButton onClick={this.props.handleNodeToggle} label="-" />:<RaisedButton onClick={this.props.handleNodeToggle} label="+" />}{(!this.testHtml(this.props.title))?this.props.title:<a target="_blank" href={this.props.title}>{this.props.title}</a>}</p>;
+    return <p style={{fontSize:24}}>
+      {(this.props.visible)?
+        <IconButton onClick={this.props.handleNodeToggle} ><FontIcon className="material-icons">expand_more</FontIcon></IconButton>
+        :
+        <IconButton onClick={this.props.handleNodeToggle}><FontIcon className="material-icons">expand_less</FontIcon></IconButton>}
+        {
+          (!this.testHtml(this.props.title))?
+          this.props.title:
+          <a target="_blank" href={this.props.title}>{this.props.title}</a>
+        }
+        <IconButton>
+          <FontIcon className="material-icons">create</FontIcon>
+        </IconButton>
+        </p>;
   }
 }
 
