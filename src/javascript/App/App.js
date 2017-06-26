@@ -34,7 +34,7 @@ import '../Style/main.scss';
 
 injectTapEventPlugin();
 
-import data from '../data.json';
+import data from '../Self.json';
 import jsMindmap from '../JavaScript.json';
 import {AppBar, RaisedButton, Chip, Paper, BottomNavigation, BottomNavigationItem, FontIcon} from 'material-ui';
 import * as colors from 'material-ui/styles/colors';
@@ -219,9 +219,9 @@ const Menu = ({
   let branchitStore = new Branchit();
 
   //change the tree to Ideas so we can track any changes to this tree
-  traverse(jsMindmap);
+  traverse(data);
 
-  branchitStore.ideaList = jsMindmap.ideas;
+  branchitStore.ideaList = data.ideas;
 
   function traverse(idea){
     let ideas = idea.ideas;
