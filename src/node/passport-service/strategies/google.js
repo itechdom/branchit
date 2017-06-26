@@ -4,12 +4,13 @@ export default function google({
     passport,
     User,
     clientId,
-    clientSecret
+    clientSecret,
+    callbackURL
 }) {
     passport.use(new GoogleStrategy({
             clientID: clientId,
             clientSecret: clientSecret,
-            callbackURL: "https://playground-test-itechdom.c9users.io/auth/google/callback"
+            callbackURL: callbackURL
         },
         function(accessToken, refreshToken, profile, cb) {
             User.findOrCreate({
@@ -20,4 +21,3 @@ export default function google({
         }
     ));
 }
-

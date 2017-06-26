@@ -22,6 +22,8 @@ function({
     //client ID and secret
     let clientId = config.get("auth.google.clientId");
     let clientSecret = config.get("auth.google.clientSecret");
+    let callbackURL = config.get("auth.google.callbackURL");
+    
     googlePassport({
         passport,
         User,
@@ -33,12 +35,12 @@ function({
         console.log(res);
         res.send('Hello! Hello service is working');
     });
-    
+
     apiRoutes.get('/error',function(req,res){
         console.log("RESPONSE >>>>>>>>");
         console.log(res);
     })
-    
+
     apiRoutes.get('/auth/google',
         passport.authenticate('google', {
             scope: ['profile']
