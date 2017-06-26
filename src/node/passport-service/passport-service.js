@@ -12,49 +12,48 @@ export
 default
 
 function({
-    app,
-    User,
-    config
+  app,
+  User,
+  config
 }) {
 
-    app.use(passport.initialize());
+  app.use(passport.initialize());
 
-    //client ID and secret
-    let clientId = config.get("auth.google.clientId");
-    let clientSecret = config.get("auth.google.clientSecret");
-    let callbackURL = config.get("auth.google.callbackURL");
+  //client ID and secret
+  let clientId = config.get("auth.google.clientId");
+  let clientSecret = config.get("auth.google.clientSecret");
+  let callbackURL = config.get("auth.google.callbackURL");
 
-    googlePassport({
-        passport,
-        User,
-        clientId,
-        clientSecret,
-        callbackURL
+  googlePassport({
+    passport,
+    User,
+    clientId,
+    clientSecret,
+    callbackURL
+  });
+
+  apiRoutes.get('/', function(req, res) {
+    res.send('Hello! Passport service is working');
+  });
+
+  apiRoutes.get('/error',function(req,res){
+    console.log("RESPONSE >>>>>>>>");
+    res.send("ERROR");
+  })
+
+  apiRoutes.get('/success',function(req,res){
+    console.log("Success >>>>>>>>");
+    res.send("Success");
+  })
+
+  app.get('/auth/google',
+    passport.authenticate('google', { scope: ['profile'] }));
+
+  app.get('/auth/google/callback',
+    passport.authenticate('google', { failureRedirect: '/error' }),
+    function(req, res) {
+      // Successful authentication, redirect home.
+      res.redirect('/success');
     });
-
-    apiRoutes.get('/', function(req, res) {
-        res.send('Hello! Passport service is working');
-    });
-
-    apiRoutes.get('/error',function(req,res){
-        console.log("RESPONSE >>>>>>>>");
-        console.log(res);
-        res.send("ERROR");
-    })
-
-    apiRoutes.get('/auth/google',
-        passport.authenticate('google', {
-            scope: ['profile']
-        }));
-
-    apiRoutes.get('/auth/google/callback',
-        passport.authenticate('google', {
-            failureRedirect: '/error'
-        }),
-        (req, res) => {
-            // Successful authentication, redirect home.
-            return res.send("You Have Authenticated!");
-            res.redirect('/hello');
-        });
-    return apiRoutes;
+  return apiRoutes;
 }

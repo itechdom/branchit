@@ -19,7 +19,7 @@ export default function google({
             //     return cb(err, user);
             // });
             console.log(accessToken,"============",refreshToken);
-            return cb(accessToken,refreshToken,profile);
+            return cb(undefined,"bye");
         }
     ));
 }
