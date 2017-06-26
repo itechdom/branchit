@@ -23,22 +23,23 @@ function({
     let clientId = config.get("auth.google.clientId");
     let clientSecret = config.get("auth.google.clientSecret");
     let callbackURL = config.get("auth.google.callbackURL");
-    
+
     googlePassport({
         passport,
         User,
         clientId,
-        clientSecret
+        clientSecret,
+        callbackURL
     });
 
     apiRoutes.get('/', function(req, res) {
-        console.log(res);
-        res.send('Hello! Hello service is working');
+        res.send('Hello! Passport service is working');
     });
 
     apiRoutes.get('/error',function(req,res){
         console.log("RESPONSE >>>>>>>>");
         console.log(res);
+        res.send("ERROR");
     })
 
     apiRoutes.get('/auth/google',
@@ -52,6 +53,7 @@ function({
         }),
         (req, res) => {
             // Successful authentication, redirect home.
+            return res.send("You Have Authenticated!");
             res.redirect('/hello');
         });
     return apiRoutes;

@@ -13,11 +13,13 @@ export default function google({
             callbackURL: callbackURL
         },
         function(accessToken, refreshToken, profile, cb) {
-            User.findOrCreate({
-                googleId: profile.id
-            }, function(err, user) {
-                return cb(err, user);
-            });
+            // User.findOrCreate({
+            //     googleId: profile.id
+            // }, function(err, user) {
+            //     return cb(err, user);
+            // });
+            console.log(accessToken,"============",refreshToken);
+            return cb(accessToken,refreshToken,profile);
         }
     ));
 }
