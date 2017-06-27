@@ -13,7 +13,7 @@ var config = require('config'); // get our config file
 // =================================================================
 var port = config.get('server.port'); // used to create, sign, and verify tokens
 var ip = config.get('server.ip');
-mongoose.connect(`${config.get('db.host')}:${config.get('db.port')}`); // connect to database
+mongoose.connect(`${config.get('db.host')}:${config.get('db.port')}/${config.get('db.name')}`); // connect to database
 app.set('superSecret', config.secret); // secret variable
 
 //CORS
@@ -27,13 +27,13 @@ app.use(function(req, res, next) {
 // =================================================================
 // Import web services ========================================
 // =================================================================
-//var User   = require('./budgetqt-service/models/user'); // get our mongoose model
+var User   = require('./branchit-service/models/user'); // get our mongoose model
 
 import passportService from './passport-service/passport-service.js'
-const passportApi = passportService({app,config});
+const passportApi = passportService({app,config,User});
 
 import branchitService from './branchit-service/branchit-service.js';
-//const branchitApi = branchitService({app});
+const branchitApi = branchitService({app});
 
 // use body parser so we can get info from POST and/or URL parameters
 app.use(bodyParser.urlencoded({ extended: false }));

@@ -5,7 +5,8 @@
     },
     "db":{
         "host":"mongodb://localhost",
-        "port":27017
+        "port":27017,
+        "name":"branchit"
     },
     "auth":{
         "google":{

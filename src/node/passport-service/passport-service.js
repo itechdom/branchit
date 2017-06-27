@@ -1,6 +1,9 @@
 // basic route (http://localhost:8080)
 const express = require('express');
 import passport from 'passport';
+var bodyParser  = require('body-parser');
+var cookieParser = require('cookie-parser')
+var session = require('express-session');
 import googlePassport from './strategies/google.js';
 
 // ---------------------------------------------------------
@@ -18,6 +21,19 @@ function({
 }) {
 
   app.use(passport.initialize());
+  app.use(cookieParser());
+  app.use(bodyParser());
+  app.use(session({ secret: 'keyboard cat' }));
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+  passport.serializeUser(function(user, done) {
+    done(null, user);
+  });
+
+  passport.deserializeUser(function(user, done) {
+    done(null, user);
+  });
 
   //client ID and secret
   let clientId = config.get("auth.google.clientId");
@@ -47,13 +63,13 @@ function({
   })
 
   app.get('/auth/google',
-    passport.authenticate('google', { scope: ['profile'] }));
+  passport.authenticate('google', { scope: ['profile'] }));
 
   app.get('/auth/google/callback',
-    passport.authenticate('google', { failureRedirect: '/error' }),
-    function(req, res) {
-      // Successful authentication, redirect home.
-      res.redirect('/success');
-    });
+  passport.authenticate('google', { failureRedirect: '/error' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/success');
+  });
   return apiRoutes;
 }
