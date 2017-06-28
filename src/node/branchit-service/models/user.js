@@ -4,11 +4,10 @@ var Schema = mongoose.Schema;
 let userSchema = new Schema({
 	id: String,
 	name: String,
-	email: String,
-	password: String,
-	activated:Boolean,
-	admin: Boolean
-})
+	accessToken:String,
+	refreshToken:String,
+	image:String
+});
 userSchema.plugin(findOrCreate);
 
 // set up a mongoose model

@@ -27,12 +27,14 @@ function({
   app.use(passport.initialize());
   app.use(passport.session());
 
-  passport.serializeUser(function(user, done) {
-    done(null, user);
+  passport.serializeUser((user, done)=>{
+    done(null, user.id);
   });
 
-  passport.deserializeUser(function(user, done) {
-    done(null, user);
+  passport.deserializeUser((id, done) => {
+    User.findById(id, (err, user) => {
+      done(err, user);
+    });
   });
 
   //client ID and secret
@@ -53,13 +55,11 @@ function({
   });
 
   apiRoutes.get('/error',function(req,res){
-    console.log("RESPONSE >>>>>>>>");
-    res.send("ERROR");
+    res.status(401).send({message:"Error!"});
   })
 
   apiRoutes.get('/success',function(req,res){
-    console.log("Success >>>>>>>>");
-    res.send("Success");
+    res.status(200).send({message:"Success!"});
   })
 
   app.get('/auth/google',
@@ -68,8 +68,7 @@ function({
   app.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/error' }),
   function(req, res) {
-    // Successful authentication, redirect home.
-    res.redirect('/success');
+    res.send(req.user);
   });
   return apiRoutes;
 }

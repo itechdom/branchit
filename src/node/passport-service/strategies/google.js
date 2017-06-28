@@ -15,15 +15,12 @@ export default function google({
   function(accessToken, refreshToken, profile, cb) {
     User.findOrCreate(
       {
-        id: profile.id
-      },
-      {
         id: profile.id,
-        accessToken:accessToken,
-        refreshToken:refreshToken
-      }
-      ,(err, user)=>{
-        console.log(user);
+        name: profile.displayName,
+        refreshToken:refreshToken,
+        accessToken:accessToken
+      },
+      (err, user)=>{
         return cb(err, user);
       }
     );
