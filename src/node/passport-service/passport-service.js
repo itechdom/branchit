@@ -32,7 +32,7 @@ function({
   });
 
   passport.deserializeUser((id, done) => {
-    User.findById(id, (err, user) => {
+    User.find({id}, (err, user) => {
       done(err, user);
     });
   });
@@ -55,20 +55,17 @@ function({
   });
 
   apiRoutes.get('/error',function(req,res){
-    res.status(401).send({message:"Error!"});
+    res.status(401).send({message:"Error Logging In!"});
   })
 
-  apiRoutes.get('/success',function(req,res){
-    res.status(200).send({message:"Success!"});
-  })
-
-  app.get('/auth/google',
+  apiRoutes.get('/auth/google',
   passport.authenticate('google', { scope: ['profile'] }));
 
-  app.get('/auth/google/callback',
+  apiRoutes.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/error' }),
   function(req, res) {
     res.send(req.user);
   });
+
   return apiRoutes;
 }

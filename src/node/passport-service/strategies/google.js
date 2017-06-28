@@ -16,6 +16,8 @@ export default function google({
     User.findOrCreate(
       {
         id: profile.id,
+      },
+      {
         name: profile.displayName,
         refreshToken:refreshToken,
         accessToken:accessToken
