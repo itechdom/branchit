@@ -7,6 +7,8 @@ export class Branchit {
   @observable ideaList = [];
   @observable level;
   @observable maxLevel;
+  @observable pendingRequestCount;
+  @observable isLoggedIn = false;
   minLevel;
 
   constructor(){
@@ -28,6 +30,36 @@ export class Branchit {
     node.visible = !node.visible;
     this.level--;
     this.level++;
+  }
+
+  @action login(){
+    let loginURL = `${HOST}/auth/google`;
+    window.open(loginURL);
+  }
+
+  @action isAuthenticated(){
+    this.pendingRequestCount++;
+    let req = superagent.get(`${HOST}/isauth`);
+    req.end(action("login-callback",(err,res)=>{
+      this.pendingRequestCount--;
+      if(err){
+        this.isLoggedIn = false;
+        return console.log("err: ",err);
+      }
+      return this.isLoggedIn = true;
+    }));
+  }
+
+  @action testRequest(){
+    this.pendingRequestCount++;
+    let req = superagent.get(`${HOST}/`);
+    req.end(action("login-callback",(err,res)=>{
+      if(err){
+        console.log("err: ",err);
+      }
+      this.pendingRequestCount--;
+      console.log(res);
+    }));
   }
 }
 

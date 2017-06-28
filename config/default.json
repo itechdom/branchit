@@ -3,6 +3,10 @@
         "port":8082,
         "ip":"0.0.0.0"
     },
+    "client":{
+      "port":8084,
+      "ip":"127.0.0.1"
+    },
     "db":{
         "host":"mongodb://localhost",
         "port":27017,

@@ -36,7 +36,7 @@ injectTapEventPlugin();
 
 import data from '../Self.json';
 import jsMindmap from '../JavaScript.json';
-import {AppBar, RaisedButton, Chip, Paper, BottomNavigation, BottomNavigationItem, FontIcon, IconButton} from 'material-ui';
+import {AppBar, RaisedButton, Chip, Paper, BottomNavigation, BottomNavigationItem, FontIcon, IconButton, Snackbar} from 'material-ui';
 import * as colors from 'material-ui/styles/colors';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -74,12 +74,19 @@ const muiTheme = getMuiTheme({
 
   constructor(props){
     super(props);
+    this.props.store.testRequest();
+    this.props.store.isAuthenticated();
   }
 
   render() {
+    let {store} = this.props;
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div>
+          <Snackbar
+            open={store.isLoggedIn}
+            message="You are logged In"
+          />
           <AppBar
             iconElementLeft={<span></span>}
             style={{textAlign:"center"}}
@@ -92,17 +99,21 @@ const muiTheme = getMuiTheme({
             changeRoute={(index)=>index = 0}
           />
           <RaisedButton
+            label={"Login"}
+            onClick={()=>{store.login()}}
+          />
+          <RaisedButton
             label={"-"}
-            onClick={()=>{this.props.store.decremenetLevel()}}
+            onClick={()=>{store.decremenetLevel()}}
           />
           <RaisedButton
             label={"+"}
-            onClick={()=>{this.props.store.incrementLevel()}}
+            onClick={()=>{store.incrementLevel()}}
           />
           <Tree
-            nodeList={this.props.store.ideaList}
-            level={this.props.store.level}
-            handleNodeToggle={(node)=>{this.props.store.toggleChildVisible(node)}}
+            nodeList={store.ideaList}
+            level={store.level}
+            handleNodeToggle={(node)=>{store.toggleChildVisible(node)}}
           />
           <DevTools />
           <Footer/>
@@ -188,68 +199,68 @@ class Node extends React.Component{
         <IconButton>
           <FontIcon className="material-icons">create</FontIcon>
         </IconButton>
-        </p>;
-  }
-}
-
-const Footer = () => (
-  <footer style={{marginTop:'4em', padding:'2em',textAlign:'center',backgroundColor:colors.grey300}}>
-    <p>Branchit</p>
-  </footer>
-);
-
-const Menu = ({
-  changeRoute,
-  selectedRoute
-}) => (
-  <Paper zDepth={1}>
-    <BottomNavigation
-      selectedIndex={selectedRoute}
-      >
-        <BottomNavigationItem
-          icon={<FontIcon className="material-icons">home</FontIcon>}
-          label="Home"
-          data-route="/"
-          onTouchTap={() => changeRoute(0)}
-        />
-        <BottomNavigationItem
-          icon={<FontIcon className="material-icons">favorite</FontIcon>}
-          label="Stats"
-          data-route="/portfolio"
-          onTouchTap={() => changeRoute(1)}
-        />
-        <BottomNavigationItem
-          icon={<FontIcon className="material-icons">info</FontIcon>}
-          label="Rewards"
-          data-route="/progress"
-          onTouchTap={() => changeRoute(2)}
-        />
-      </BottomNavigation>
-    </Paper>
-  );
-
-
-  let branchitStore = new Branchit();
-
-  //change the tree to Ideas so we can track any changes to this tree
-  traverse(data);
-
-  branchitStore.ideaList = data.ideas;
-
-  function traverse(idea){
-    let ideas = idea.ideas;
-    if(ideas){
-      Object.keys(ideas).map((key)=>{
-        //do the switching here ...
-        ideas[key] = new Idea(ideas[key])
-        traverse(ideas[key]);
-      });
+      </p>;
     }
   }
 
-  ReactDOM.render(
-    <IntlProvider locale="en">
-      <App store={branchitStore} />
-    </IntlProvider>,
-    document.getElementById('app')
+  const Footer = () => (
+    <footer style={{marginTop:'4em', padding:'2em',textAlign:'center',backgroundColor:colors.grey300}}>
+      <p>Branchit</p>
+    </footer>
   );
+
+  const Menu = ({
+    changeRoute,
+    selectedRoute
+  }) => (
+    <Paper zDepth={1}>
+      <BottomNavigation
+        selectedIndex={selectedRoute}
+        >
+          <BottomNavigationItem
+            icon={<FontIcon className="material-icons">home</FontIcon>}
+            label="Home"
+            data-route="/"
+            onTouchTap={() => changeRoute(0)}
+          />
+          <BottomNavigationItem
+            icon={<FontIcon className="material-icons">favorite</FontIcon>}
+            label="Stats"
+            data-route="/portfolio"
+            onTouchTap={() => changeRoute(1)}
+          />
+          <BottomNavigationItem
+            icon={<FontIcon className="material-icons">info</FontIcon>}
+            label="Rewards"
+            data-route="/progress"
+            onTouchTap={() => changeRoute(2)}
+          />
+        </BottomNavigation>
+      </Paper>
+    );
+
+
+    let branchitStore = new Branchit();
+
+    //change the tree to Ideas so we can track any changes to this tree
+    traverse(data);
+
+    branchitStore.ideaList = data.ideas;
+
+    function traverse(idea){
+      let ideas = idea.ideas;
+      if(ideas){
+        Object.keys(ideas).map((key)=>{
+          //do the switching here ...
+          ideas[key] = new Idea(ideas[key])
+          traverse(ideas[key]);
+        });
+      }
+    }
+
+    ReactDOM.render(
+      <IntlProvider locale="en">
+        <App store={branchitStore} />
+      </IntlProvider>,
+      document.getElementById('app')
+    );
