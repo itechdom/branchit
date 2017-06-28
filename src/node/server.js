@@ -45,7 +45,7 @@ app.use(morgan('dev'));
 // ==========
 // Register Services
 // ==========
-
+app.use('/static', express.static('dist'))
 app.use('/',passportApi);
 //app.use('/api/v1',branchitApi);
 

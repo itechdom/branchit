@@ -7,7 +7,7 @@ module.exports = {
     },
     output: {
         path: __dirname + '/dist', // `dist` is the destination
-        filename: 'bundle.js',
+        filename: '[name].js',
         publicPath: "/dist/",
     },
     module: {
@@ -26,8 +26,8 @@ module.exports = {
                 'sass-loader',
             ]
         },
-        { 
-            test: /\.json$/, 
+        {
+            test: /\.json$/,
             loader: "json-loader"  //JSON loader
         },
         {
