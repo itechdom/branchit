@@ -32,7 +32,7 @@ function({
   });
 
   passport.deserializeUser((id, done) => {
-    User.find({id}, (err, user) => {
+    User.findOne({id}, (err, user) => {
       done(err, user);
     });
   });
