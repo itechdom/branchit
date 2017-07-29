@@ -2,6 +2,7 @@ import {observable, computed, autorun, action, reaction} from 'mobx';
 import uuidV4 from 'uuid/v4';
 import superagent from 'superagent';
 import {HOST} from  "../.config.js";
+import queryString from 'query-string';
 
 export class Branchit {
   @observable ideaList = [];
@@ -9,11 +10,25 @@ export class Branchit {
   @observable maxLevel;
   @observable pendingRequestCount;
   @observable isLoggedIn = false;
+  accessToken;
   minLevel;
 
   constructor(){
     this.ideaList;
     this.level = 1;
+    const parsed = queryString.parse(location.search);
+    this.accessToken = this.storeAccessToken(parsed.access);
+  }
+
+  storeAccessToken(token){
+    if(token){
+      localStorage.setItem("accessToken", token);
+      return token;
+    }
+    else{
+      let storedToken = localStorage.getItem("accessToken");
+      return storedToken;
+    }
   }
 
   @action incrementLevel(){

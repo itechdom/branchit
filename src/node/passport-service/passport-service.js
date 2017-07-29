@@ -68,7 +68,7 @@ function({
   apiRoutes.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/error' }),
   (req, res)=>{
-    res.redirect(`http://localhost:8084`);
+    res.redirect(`http://localhost:8080?access=${req.user.accessToken}`);
   });
 
   return apiRoutes;

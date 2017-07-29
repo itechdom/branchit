@@ -7,8 +7,8 @@ module.exports = {
     },
     output: {
         path: __dirname + '/dist', // `dist` is the destination
-        filename: '[name].js',
-        publicPath: "/dist/",
+        filename: 'bundle.js',
+        publicPath: "./dist/",
     },
     module: {
         rules: [
