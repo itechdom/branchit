@@ -41,9 +41,14 @@ export
 
   apiRoutes.get('/auth', function (req, res) {
     // generate a url that asks permissions for Google+ and Google Calendar scopes
-    var scopes = [
-      'https://www.googleapis.com/auth/plus.me',
-      'https://www.googleapis.com/auth/drive'
+    const scopes = [
+      'https://www.googleapis.com/auth/drive',
+      'https://www.googleapis.com/auth/drive.appdata',
+      'https://www.googleapis.com/auth/drive.file',
+      'https://www.googleapis.com/auth/drive.metadata',
+      'https://www.googleapis.com/auth/drive.metadata.readonly',
+      'https://www.googleapis.com/auth/drive.photos.readonly',
+      'https://www.googleapis.com/auth/drive.readonly'
     ];
     var url = oauth2Client.generateAuthUrl({
       // 'online' (default) or 'offline' (gets refresh_token)
@@ -59,13 +64,18 @@ export
   })
 
   apiRoutes.get('/file/list',function(req,res){
-    const params = { pageSize: 3 };
-    drive.files.list(params, (err, result) => {
+    const params = { 
+      pageSize: 3,
+      // folderId:"0B9tPYCpuqoIrflBJN01SZEFFcUJLS3FkYTktbXVPOUwyZFh6OGZRSmRnWXFYNGUxQk9iRzA",
+      fileId:"0B9tPYCpuqoIrU1ZxMnVXU2praUk"
+    };
+    drive.files.get(params, (err, result) => {
       if (err) {
         console.log(err);
-        throw err;
+        return res.send(err);
       }
-      res.send(result.files);
+      console.log(result);
+      return res.send(result.data);
     });
   })
 
