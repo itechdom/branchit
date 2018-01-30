@@ -58,16 +58,28 @@ export
     res.redirect(url);
   })
 
+  apiRoutes.get('/file/list',function(req,res){
+    const params = { pageSize: 3 };
+    drive.files.list(params, (err, result) => {
+      if (err) {
+        console.log(err);
+        throw err;
+      }
+      res.send(result.files);
+    });
+  })
+
   apiRoutes.get('/auth/callback',
     (req, res) => {
-      oauth2Client.getToken(req.params.code, function (err, tokens) {
+      oauth2Client.getToken(req.query.code, function (err, tokens) {
         // Now tokens contains an access_token and an optional refresh_token. Save them.
-        console.log(tokens)
         if (!err) {
           oauth2Client.setCredentials(tokens);
+          return res.send(tokens);
         }
+        return res.send(err);
+
       });
-      // res.redirect(`http://localhost:8080?access=${req.user.accessToken}`);
     });
 
   return apiRoutes;
