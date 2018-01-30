@@ -30,6 +30,7 @@ import '../Style/main.scss';
 
 import { Tree } from './Tree.js';
 import Home from './Home.js'
+import Files from './Files.js'
 
 injectTapEventPlugin();
 
@@ -121,12 +122,10 @@ const Menu = ({
       <BottomNavigation
         selectedIndex={selectedRoute}
       >
-        <BottomNavigationItem
-          icon={<FontIcon className="material-icons">home</FontIcon>}
-          label="Home"
-          data-route="/"
-          onTouchTap={() => changeRoute(0)}
-        />
+        <Link to="/files">
+        <FontIcon className="material-icons">home</FontIcon>
+        Files
+        </Link>
       </BottomNavigation>
     </Paper>
   );
@@ -155,6 +154,7 @@ ReactDOM.render(
     <Router history={hashHistory}>
       <Route path="/" component={App}>
         <IndexRoute component={Home} />
+        <Route path="files" component={Files} />
       </Route>
     </Router>
   </Provider>
