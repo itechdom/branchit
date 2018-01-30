@@ -17,14 +17,8 @@ import {
 }
   from 'react-intl';
 
-import {
-  BrowserRouter as Router,
-  Route,
-  Link
-}
-  from 'react-router-dom'
-
-import Stats from '../Stats';
+// First we import some modules...
+import { Router, Route, IndexRoute, Link, hashHistory } from 'react-router'
 
 import DevTools from 'mobx-react-devtools';
 
@@ -32,7 +26,8 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import '../Style/main.scss';
 
-import {Tree} from './Tree.js';
+import { Tree } from './Tree.js';
+import Home from './Home.js'
 
 injectTapEventPlugin();
 
@@ -76,12 +71,13 @@ const muiTheme = getMuiTheme({
 
   constructor(props) {
     super(props);
-    this.props.store.testRequest();
-    this.props.store.isAuthenticated();
+    var store = this.props.route.store;
+    store.testRequest();
+    store.isAuthenticated();
   }
 
   render() {
-    let { store } = this.props;
+    let store = this.props.route.store;
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div>
@@ -100,23 +96,7 @@ const muiTheme = getMuiTheme({
             selectedRoute={0}
             changeRoute={(index) => index = 0}
           />
-          <RaisedButton
-            label={"Login"}
-            onClick={() => { store.login() }}
-          />
-          <RaisedButton
-            label={"-"}
-            onClick={() => { store.decremenetLevel() }}
-          />
-          <RaisedButton
-            label={"+"}
-            onClick={() => { store.incrementLevel() }}
-          />
-          <Tree
-            nodeList={store.ideaList}
-            level={store.level}
-            handleNodeToggle={(node) => { store.toggleChildVisible(node) }}
-          />
+          {this.props.children}
           <DevTools />
           <Footer />
         </div>
@@ -169,8 +149,10 @@ function traverse(idea) {
 }
 
 ReactDOM.render(
-  <IntlProvider locale="en">
-    <App store={branchitStore} />
-  </IntlProvider>,
+  <Router history={hashHistory}>
+    <Route store={branchitStore} path="/" component={App}>
+      <IndexRoute store={branchitStore} component={Home} />
+    </Route>
+  </Router>,
   document.getElementById('app')
 );

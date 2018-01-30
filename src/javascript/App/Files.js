@@ -5,7 +5,6 @@ class Files extends React.Component{
     render(){
         let files = props.files;
         return <div>
-            Files here
             </div>
     }
 }
