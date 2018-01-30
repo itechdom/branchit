@@ -223,18 +223,6 @@ class Node extends React.Component{
             data-route="/"
             onTouchTap={() => changeRoute(0)}
           />
-          <BottomNavigationItem
-            icon={<FontIcon className="material-icons">favorite</FontIcon>}
-            label="Stats"
-            data-route="/portfolio"
-            onTouchTap={() => changeRoute(1)}
-          />
-          <BottomNavigationItem
-            icon={<FontIcon className="material-icons">info</FontIcon>}
-            label="Rewards"
-            data-route="/progress"
-            onTouchTap={() => changeRoute(2)}
-          />
         </BottomNavigation>
       </Paper>
     );

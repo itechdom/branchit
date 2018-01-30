@@ -32,6 +32,9 @@ var User   = require('./branchit-service/models/user'); // get our mongoose mode
 import passportService from './passport-service/passport-service.js'
 const passportApi = passportService({app,config,User});
 
+import googleService from './google-service/google-service.js'
+const googleApi = googleService({app,config,User});
+
 import branchitService from './branchit-service/branchit-service.js';
 const branchitApi = branchitService({app});
 
@@ -47,6 +50,7 @@ app.use(morgan('dev'));
 // ==========
 app.use('/static', express.static('dist'))
 app.use('/',passportApi);
+app.use('/google',googleApi);
 //app.use('/api/v1',branchitApi);
 
 // =================================================================

@@ -6,9 +6,7 @@ module.exports = {
         app: './src/javascript/index.js',
     },
     output: {
-        path: __dirname + '/dist', // `dist` is the destination
         filename: 'bundle.js',
-        publicPath: "./dist/",
     },
     module: {
         rules: [
@@ -35,9 +33,5 @@ module.exports = {
             loader: "file-loader"  //JSON loader
         }
         ]
-    },
-    //To run development server
-    devServer: {
-        contentBase: __dirname,
-    },
+    }
 };

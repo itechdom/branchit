@@ -14,7 +14,7 @@
     },
     "auth":{
         "google":{
-            "callbackURL":"http://localhost:8082/auth/google/callback"
+            "callbackURL":"http://localhost:8082/google/auth/callback"
         }
     }
 }
