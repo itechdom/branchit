@@ -48,7 +48,7 @@ export class Branchit {
   }
 
   @action login(){
-    let loginURL = `${HOST}/auth/google`;
+    let loginURL = `${HOST}/google/auth`;
     window.open(loginURL);
   }
 
