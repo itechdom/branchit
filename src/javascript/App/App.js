@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {
-  observer
+  observer,
+  Provider,
+  inject
 }
   from "mobx-react";
 import Dropzone from 'react-dropzone';
@@ -66,18 +68,18 @@ const muiTheme = getMuiTheme({
     backgroundColor: colors.grey700
   }
 });
-
+@inject('branchitStore')
 @observer class App extends React.Component {
 
   constructor(props) {
     super(props);
-    var store = this.props.route.store;
+    var store = this.props.branchitStore;
     store.testRequest();
     store.isAuthenticated();
   }
 
   render() {
-    let store = this.props.route.store;
+    let store = this.props.branchitStore;
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div>
@@ -149,10 +151,13 @@ function traverse(idea) {
 }
 
 ReactDOM.render(
-  <Router history={hashHistory}>
-    <Route store={branchitStore} path="/" component={App}>
-      <IndexRoute store={branchitStore} component={Home} />
-    </Route>
-  </Router>,
+  <Provider branchitStore={branchitStore}>
+    <Router history={hashHistory}>
+      <Route path="/" component={App}>
+        <IndexRoute component={Home} />
+      </Route>
+    </Router>
+  </Provider>
+  ,
   document.getElementById('app')
 );
