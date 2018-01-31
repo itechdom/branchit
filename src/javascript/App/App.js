@@ -36,7 +36,7 @@ injectTapEventPlugin();
 
 import data from '../Self.json';
 import jsMindmap from '../JavaScript.json';
-import { AppBar, RaisedButton, FlatButton, Chip, Paper, BottomNavigation, BottomNavigationItem, FontIcon, IconButton, Snackbar } from 'material-ui';
+import { AppBar,Drawer, MenuItem, RaisedButton, FlatButton, Chip, Paper, BottomNavigation, BottomNavigationItem, FontIcon, IconButton, Snackbar } from 'material-ui';
 import * as colors from 'material-ui/styles/colors';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -48,14 +48,14 @@ import {
 const muiTheme = getMuiTheme({
   fontFamily: 'PT Sans Narrow,Roboto,sans-serif',
   palette: {
-    primary1Color: colors.lightBlue500,
+    primary1Color: colors.grey100,
     primary2Color: colors.teal500,
     primary3Color: colors.grey400,
     accent1Color: colors.pinkA200,
     accent2Color: colors.grey100,
     accent3Color: colors.grey500,
     textColor: colors.darkBlack,
-    alternateTextColor: colors.white,
+    alternateTextColor: colors.darkBlack,
     canvasColor: colors.white,
     borderColor: colors.grey300,
     disabledColor: fade(colors.darkBlack, 0.3),
@@ -71,10 +71,10 @@ const muiTheme = getMuiTheme({
 
   constructor(props) {
     super(props);
-    var store = this.props.branchitStore;
-    store.testRequest();
-    store.isAuthenticated();
+    this.state = {open: false};
   }
+
+  handleToggle = () => this.setState({open: !this.state.open});
 
   render() {
     let store = this.props.branchitStore;
@@ -85,6 +85,11 @@ const muiTheme = getMuiTheme({
             open={store.isLoggedIn}
             message="You are logged In"
           />
+          <Drawer open={this.state.open}>
+          <MenuItem onClick={()=>alert("hello")}>Home</MenuItem>
+          <MenuItem>Recent</MenuItem>
+          <MenuItem>Stats</MenuItem>
+          </Drawer>
           <AppBar
             className="app__title"
             title="Pocket Knowledge"
@@ -92,13 +97,12 @@ const muiTheme = getMuiTheme({
               <div>
                 <FlatButton 
                 label="Login" 
-                style={{color:"white"}}
                 onClick={() => { store.login() }} 
                 icon={<FontIcon className="fa fa-sign-in"></FontIcon>}
                 />
               </div>
             }
-            // onLeftIconButtonClick={}
+            onLeftIconButtonClick={this.handleToggle}
             // onRightIconButtonClick={}
           />
           {this.props.children}
