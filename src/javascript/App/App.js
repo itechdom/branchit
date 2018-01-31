@@ -36,7 +36,7 @@ injectTapEventPlugin();
 
 import data from '../Self.json';
 import jsMindmap from '../JavaScript.json';
-import { AppBar, RaisedButton, Chip, Paper, BottomNavigation, BottomNavigationItem, FontIcon, IconButton, Snackbar } from 'material-ui';
+import { AppBar, RaisedButton, FlatButton, Chip, Paper, BottomNavigation, BottomNavigationItem, FontIcon, IconButton, Snackbar } from 'material-ui';
 import * as colors from 'material-ui/styles/colors';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -46,9 +46,9 @@ import {
   from 'material-ui/utils/colorManipulator';
 
 const muiTheme = getMuiTheme({
-  fontFamily: 'Roboto,sans-serif',
+  fontFamily: 'PT Sans Narrow,Roboto,sans-serif',
   palette: {
-    primary1Color: colors.grey900,
+    primary1Color: colors.lightBlue500,
     primary2Color: colors.teal500,
     primary3Color: colors.grey400,
     accent1Color: colors.pinkA200,
@@ -61,9 +61,6 @@ const muiTheme = getMuiTheme({
     disabledColor: fade(colors.darkBlack, 0.3),
     pickerHeaderColor: colors.cyan500,
     shadowColor: colors.fullBlack
-  },
-  appBar: {
-    height: 'auto'
   },
   tabs: {
     backgroundColor: colors.grey700
@@ -83,26 +80,30 @@ const muiTheme = getMuiTheme({
     let store = this.props.branchitStore;
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-        <div>
+        <Paper className="app__border" zDepth={1}>
           <Snackbar
             open={store.isLoggedIn}
             message="You are logged In"
           />
           <AppBar
-            iconElementLeft={<span></span>}
-            style={{ textAlign: "center" }}
-            title={
-              <div><h1 className="title">Branchit</h1>
-              </div>}
-          />
-          <Menu
-            selectedRoute={0}
-            changeRoute={(index) => index = 0}
+            className="app__title"
+            title="Pocket Knowledge"
+            iconElementRight={
+              <div>
+                <FlatButton 
+                label="Login" 
+                style={{color:"white"}}
+                onClick={() => { store.login() }} 
+                icon={<FontIcon className="fa fa-sign-in"></FontIcon>}
+                />
+              </div>
+            }
+            // onLeftIconButtonClick={}
+            // onRightIconButtonClick={}
           />
           {this.props.children}
-          <DevTools />
-          <Footer />
-        </div>
+          {/* <DevTools /> */}
+        </Paper>
       </MuiThemeProvider>
     );
   }
@@ -113,23 +114,6 @@ const Footer = () => (
     <p>Branchit</p>
   </footer>
 );
-
-const Menu = ({
-    changeRoute,
-  selectedRoute
-  }) => (
-    <Paper zDepth={1}>
-      <BottomNavigation
-        selectedIndex={selectedRoute}
-      >
-        <Link to="/files">
-        <FontIcon className="material-icons">home</FontIcon>
-        Files
-        </Link>
-      </BottomNavigation>
-    </Paper>
-  );
-
 
 let branchitStore = new Branchit();
 

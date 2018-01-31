@@ -16,19 +16,14 @@ export default class Home extends React.Component {
         let {ideaList,level} = this.props.branchitStore;
         let branchitStore = this.props.branchitStore;
         return <div>
-            <RaisedButton
-                label={"Login"}
-                onClick={() => { branchitStore.login() }}
-            />
-            <RaisedButton
+            {/* <RaisedButton
                 label={"-"}
                 onClick={() => { branchitStore.decremenetLevel() }}
             />
             <RaisedButton
                 label={"+"}
                 onClick={() => { branchitStore.incrementLevel() }}
-            />
-            {level}
+            /> */}
             <Tree
                 nodeList={ideaList}
                 level={level}

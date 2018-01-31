@@ -1,5 +1,22 @@
 @import "../../../node_modules/react-vis/dist/style";
 
+
+body{
+	font-family: 'PT Sans Narrow';
+	background-image: url("doodles.png");
+	background-repeat: repeat;
+	display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.app__border{
+	min-height:300px;
+	min-width: 500px;
+}
+.app__title{
+	font-family: 'PT Sans Narrow'!important;
+}
 h1,h2,h3,h4,h5,h6{
 }
 h3,h4,h5,h6{

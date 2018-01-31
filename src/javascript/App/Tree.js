@@ -63,7 +63,7 @@ export class Node extends React.Component {
     }
 
     render() {
-        return <p style={{ fontSize: 24 }}>
+        return <p className="idea__title" style={{ fontSize: 24 }}>
             {(this.props.visible) ?
                 <IconButton onClick={this.props.handleNodeToggle} ><FontIcon className="material-icons">expand_more</FontIcon></IconButton>
                 :
