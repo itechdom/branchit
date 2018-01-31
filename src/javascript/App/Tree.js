@@ -85,26 +85,30 @@ export class Node extends React.Component {
     return title.match(regex);
   }
 
-  renderExpandCollapse(visibile,hasChildren){
-    if(hasChildren){
-       return this.props.visible ? (
-            <IconButton onClick={this.props.handleNodeToggle}>
-              <FontIcon className="fa fa-minus" />
-            </IconButton>
-          ) : (
-            <IconButton onClick={this.props.handleNodeToggle}>
-              <FontIcon className="fa fa-plus" />
-            </IconButton>
-          )    
+  renderExpandCollapse(visibile, hasChildren) {
+    if (hasChildren) {
+      return this.props.visible ? (
+        <IconButton onClick={this.props.handleNodeToggle}>
+          <FontIcon className="fa fa-minus" />
+        </IconButton>
+      ) : (
+        <IconButton onClick={this.props.handleNodeToggle}>
+          <FontIcon className="fa fa-plus" />
+        </IconButton>
+      );
     }
-    return <div></div>;
+    return (
+      <IconButton onClick={this.props.handleNodeToggle}>
+        <FontIcon className="fa fa-leaf" />
+      </IconButton>
+    );
   }
 
   render() {
-    let {visible,hasChildren} = this.props;
+    let { visible, hasChildren } = this.props;
     return (
       <ListItem className="idea">
-        {this.renderExpandCollapse(visible,hasChildren)}
+        {this.renderExpandCollapse(visible, hasChildren)}
         {!this.testHtml(this.props.title) ? (
           <span>{this.props.title}</span>
         ) : (

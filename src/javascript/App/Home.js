@@ -1,13 +1,19 @@
 import {
   AppBar,
   RaisedButton,
+  FlatButton,
   Chip,
   Paper,
   BottomNavigation,
   BottomNavigationItem,
   FontIcon,
   IconButton,
-  Snackbar
+  Snackbar,
+  TextField,
+  GridList,
+  GridTile,
+  List,
+  ListItem
 } from "material-ui";
 import { Tree } from "./Tree.js";
 import React from "react";
@@ -23,7 +29,17 @@ export default class Home extends React.Component {
     let branchitStore = this.props.branchitStore;
     return (
       <div>
-        {/* <RaisedButton
+        <List>
+          <ListItem hoverColor="transparent" disableKeyboardFocus={true} className="grid">
+            <TextField className="grid-item" placeholder="Search" id="home__search" />
+            <FlatButton
+            label="Add"
+            secondary
+            />
+          </ListItem>
+        </List>
+        <div>
+          {/* <RaisedButton
                 label={"-"}
                 onClick={() => { branchitStore.decremenetLevel() }}
             />
@@ -31,13 +47,14 @@ export default class Home extends React.Component {
                 label={"+"}
                 onClick={() => { branchitStore.incrementLevel() }}
             /> */}
-        <Tree
-          nodeList={ideaList}
-          level={level}
-          handleNodeToggle={node => {
-            branchitStore.toggleChildVisible(node);
-          }}
-        />
+          <Tree
+            nodeList={ideaList}
+            level={level}
+            handleNodeToggle={node => {
+              branchitStore.toggleChildVisible(node);
+            }}
+          />
+        </div>
       </div>
     );
   }
