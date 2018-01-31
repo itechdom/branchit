@@ -1,22 +1,29 @@
-import { AppBar, RaisedButton, Chip, Paper, BottomNavigation, BottomNavigationItem, FontIcon, IconButton, Snackbar } from 'material-ui';
-import {Tree} from './Tree.js';
-import React from 'react';
 import {
-  observer,
-  Provider,
-  inject
-}
-  from "mobx-react";
-@inject('branchitStore') @observer
+  AppBar,
+  RaisedButton,
+  Chip,
+  Paper,
+  BottomNavigation,
+  BottomNavigationItem,
+  FontIcon,
+  IconButton,
+  Snackbar
+} from "material-ui";
+import { Tree } from "./Tree.js";
+import React from "react";
+import { observer, Provider, inject } from "mobx-react";
+@inject("branchitStore")
+@observer
 export default class Home extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-    render() {
-        let {ideaList,level} = this.props.branchitStore;
-        let branchitStore = this.props.branchitStore;
-        return <div>
-            {/* <RaisedButton
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    let { ideaList, level } = this.props.branchitStore;
+    let branchitStore = this.props.branchitStore;
+    return (
+      <div>
+        {/* <RaisedButton
                 label={"-"}
                 onClick={() => { branchitStore.decremenetLevel() }}
             />
@@ -24,11 +31,14 @@ export default class Home extends React.Component {
                 label={"+"}
                 onClick={() => { branchitStore.incrementLevel() }}
             /> */}
-            <Tree
-                nodeList={ideaList}
-                level={level}
-                handleNodeToggle={(node) => { branchitStore.toggleChildVisible(node) }}
-            />
-        </div>
-    }
+        <Tree
+          nodeList={ideaList}
+          level={level}
+          handleNodeToggle={node => {
+            branchitStore.toggleChildVisible(node);
+          }}
+        />
+      </div>
+    );
+  }
 }
