@@ -11,6 +11,7 @@ import {
   IconButton,
   Snackbar
 } from "material-ui";
+import LeafNode from "./LeafNode.js";
 import React from "react";
 export class Tree extends React.Component {
   constructor(props) {
@@ -98,9 +99,12 @@ export class Node extends React.Component {
       );
     }
     return (
-      <IconButton onClick={this.props.handleNodeToggle}>
-        <FontIcon className="fa fa-leaf" />
-      </IconButton>
+      <span>
+        <LeafNode />
+        <IconButton onClick={this.props.handleNodeToggle}>
+          <FontIcon className="fa fa-leaf" />
+        </IconButton>
+      </span>
     );
   }
 

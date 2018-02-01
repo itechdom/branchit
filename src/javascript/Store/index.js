@@ -3,6 +3,7 @@ import uuidV4 from 'uuid/v4';
 import superagent from 'superagent';
 import {HOST} from  "../config.js";
 import queryString from 'query-string';
+import moment from 'moment';
 
 export class Branchit {
   @observable ideaList = [];
@@ -85,6 +86,7 @@ export class Idea {
   attr;
   style;
   ideas;
+  date;
   @observable visible = false;
   constructor(obj){
     this.id = obj.id;
@@ -92,5 +94,6 @@ export class Idea {
     this.ideas = obj.ideas;
     this.style = obj.style;
     this.visible = false;
+    this.date = obj.date || moment();
   }
 }
