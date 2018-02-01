@@ -30,12 +30,8 @@ export default class Home extends React.Component {
     return (
       <div>
         <List>
-          <ListItem hoverColor="transparent" disableKeyboardFocus={true} className="grid">
+          <ListItem disabled={true} hoverColor="transparent" disableKeyboardFocus={true} className="grid">
             <TextField className="grid-item" placeholder="Search" id="home__search" />
-            <FlatButton
-            label="Add"
-            secondary
-            />
           </ListItem>
         </List>
         <div>

@@ -92,7 +92,7 @@ const muiTheme = getMuiTheme({
           </Drawer>
           <AppBar
             className="app__title"
-            title="Pocket Knowledge"
+            title={<span><FontIcon style={{color:"green"}} className="fa fa-leaf"></FontIcon> A leaf of knowledge</span>}
             iconElementRight={
               <div>
                 <FlatButton 
