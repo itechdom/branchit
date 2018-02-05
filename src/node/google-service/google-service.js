@@ -20,15 +20,13 @@ export default function({ app, User, config }) {
     auth: oauth2Client
   });
 
-  // route middleware to verify a token
+  // // route middleware to verify a token
   apiRoutes.use(function(req, res, next) {
     // check header or url parameters or post parameters for token
-    console.log("middle ware");
-    console.log("<---------------------------------------------->");
-    return next();
     var token =
       req.body.token || req.query.token || req.headers["x-access-token"];
-
+    console.log(token);
+    return next();
     // decode token
     if (token) {
     } else {
@@ -73,12 +71,15 @@ export default function({ app, User, config }) {
     res.redirect(url);
   });
 
-  apiRoutes.get("/file/list", function(req, res) {
+  apiRoutes.post("/file/list", function(req, res) {
     const params = {
-      pageSize: 3,
-      // folderId:"0B9tPYCpuqoIrflBJN01SZEFFcUJLS3FkYTktbXVPOUwyZFh6OGZRSmRnWXFYNGUxQk9iRzA",
+      pageSize: 3, // folderId:"0B9tPYCpuqoIrflBJN01SZEFFcUJLS3FkYTktbXVPOUwyZFh6OGZRSmRnWXFYNGUxQk9iRzA",
       fileId: "0B9tPYCpuqoIrU1ZxMnVXU2praUk"
     };
+    // Retrieve tokens via token exchange explained above or set them:
+    if (req.body.token) {
+      oauth2Client.setCredentials({ access_token: req.body.token });
+    }
     drive.files.get(params, (err, result) => {
       if (err) {
         console.log(err);
@@ -93,10 +94,13 @@ export default function({ app, User, config }) {
     oauth2Client.getToken(req.query.code, function(err, tokens) {
       // Now tokens contains an access_token and an optional refresh_token. Save them.
       if (!err) {
-        oauth2Client.setCredentials(tokens);
-        return res.send(tokens);
+        let redirectUrl = `http://localhost:8080?access_token=${
+          tokens.access_token
+        }`;
+        return res.redirect(redirectUrl);
+      } else {
+        return res.send(err);
       }
-      return res.send(err);
     });
   });
 

@@ -18,7 +18,7 @@ export class Branchit {
     this.ideaList;
     this.level = 1;
     const parsed = queryString.parse(location.search);
-    this.accessToken = this.storeAccessToken(parsed.access);
+    this.accessToken = this.storeAccessToken(parsed.access_token);
   }
 
   storeAccessToken(token) {
@@ -86,15 +86,18 @@ export class Branchit {
   @action
   getFiles() {
     this.pendingRequestCount++;
-    let token = this.auth();
-    let req = superagent.get(`${HOST}/google/file/list`);
-    req.end(
+    let token = this.getAccessToken();
+    let req = superagent.post(`${HOST}/google/file/list`);
+    req.send({token:token})
+    .end(
       action("file-callback", (err, res) => {
         if (err) {
           console.log("err: ", err);
         }
+        if(res.status === 401){
+          this.login();
+        }
         this.pendingRequestCount--;
-        console.log(res);
       })
     );
   }
