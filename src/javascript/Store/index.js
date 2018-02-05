@@ -1,9 +1,9 @@
-import {observable, computed, autorun, action, reaction} from 'mobx';
-import uuidV4 from 'uuid/v4';
-import superagent from 'superagent';
-import {HOST} from  "../config.js";
-import queryString from 'query-string';
-import moment from 'moment';
+import { observable, computed, autorun, action, reaction } from "mobx";
+import uuidV4 from "uuid/v4";
+import superagent from "superagent";
+import { HOST } from "../config.js";
+import queryString from "query-string";
+import moment from "moment";
 
 export class Branchit {
   @observable ideaList = [];
@@ -14,69 +14,89 @@ export class Branchit {
   accessToken;
   minLevel;
 
-  constructor(){
+  constructor() {
     this.ideaList;
     this.level = 1;
     const parsed = queryString.parse(location.search);
     this.accessToken = this.storeAccessToken(parsed.access);
   }
 
-  storeAccessToken(token){
-    if(token){
+  storeAccessToken(token) {
+    if (token) {
       localStorage.setItem("accessToken", token);
-      return token;
-    }
-    else{
-      let storedToken = localStorage.getItem("accessToken");
-      return storedToken;
     }
   }
 
-  @action incrementLevel(){
+  getAccessToken() {
+    let storedToken = localStorage.getItem("accessToken");
+    return storedToken;
+  }
+
+  auth() {
+    let token = this.getAccessToken();
+    if (token) {
+      return token;
+    } else {
+      console.log("no auth token");
+    }
+  }
+
+  @action
+  incrementLevel() {
     this.level++;
   }
 
-  @action decremenetLevel(){
-    if(this.level !== 1){
+  @action
+  decremenetLevel() {
+    if (this.level !== 1) {
       return this.level--;
     }
   }
 
-  @action toggleChildVisible(node){
+  @action
+  toggleChildVisible(node) {
     node.visible = !node.visible;
     this.level--;
     this.level++;
   }
 
-  @action login(){
+  @action
+  login() {
     let loginURL = `${HOST}/google/auth`;
     window.open(loginURL);
   }
 
-  @action isAuthenticated(){
+  @action
+  isAuthenticated() {
     this.pendingRequestCount++;
     //Authorization: Bearer 0b79bab50daca910b000d4f1a2b675d604257e42
-    let req = superagent.get(`${HOST}/isauth`);
-    req.end(action("login-callback",(err,res)=>{
-      this.pendingRequestCount--;
-      if(err){
-        this.isLoggedIn = false;
-        return console.log("err: ",err);
-      }
-      return this.isLoggedIn = true;
-    }));
+    let req = superagent.get(`${HOST}/file/list`);
+    req.end(
+      action("login-callback", (err, res) => {
+        this.pendingRequestCount--;
+        if (err) {
+          this.isLoggedIn = false;
+          return console.log("err: ", err);
+        }
+        return (this.isLoggedIn = true);
+      })
+    );
   }
 
-  @action testRequest(){
+  @action
+  getFiles() {
     this.pendingRequestCount++;
-    let req = superagent.get(`${HOST}/`);
-    req.end(action("login-callback",(err,res)=>{
-      if(err){
-        console.log("err: ",err);
-      }
-      this.pendingRequestCount--;
-      console.log(res);
-    }));
+    let token = this.auth();
+    let req = superagent.get(`${HOST}/google/file/list`);
+    req.end(
+      action("file-callback", (err, res) => {
+        if (err) {
+          console.log("err: ", err);
+        }
+        this.pendingRequestCount--;
+        console.log(res);
+      })
+    );
   }
 }
 
@@ -88,7 +108,7 @@ export class Idea {
   ideas;
   date;
   @observable visible = false;
-  constructor(obj){
+  constructor(obj) {
     this.id = obj.id;
     this.title = obj.title;
     this.ideas = obj.ideas;

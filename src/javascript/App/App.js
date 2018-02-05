@@ -72,6 +72,7 @@ const muiTheme = getMuiTheme({
   constructor(props) {
     super(props);
     this.state = {open: false};
+    props.branchitStore.getFiles();
   }
 
   handleToggle = () => this.setState({open: !this.state.open});
