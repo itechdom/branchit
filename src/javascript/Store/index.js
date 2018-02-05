@@ -19,6 +19,7 @@ export class Branchit {
     this.level = 1;
     const parsed = queryString.parse(location.search);
     this.accessToken = this.storeAccessToken(parsed.access_token);
+    this.refreshToken = this.storeRefreshToken(parsed.refresh_token);
   }
 
   storeAccessToken(token) {
@@ -29,6 +30,17 @@ export class Branchit {
 
   getAccessToken() {
     let storedToken = localStorage.getItem("accessToken");
+    return storedToken;
+  }
+
+  storeRefreshToken(token) {
+    if (token) {
+      localStorage.setItem("refreshToken", token);
+    }
+  }
+
+  getRefreshToken() {
+    let storedToken = localStorage.getItem("refreshToken");
     return storedToken;
   }
 
@@ -87,8 +99,9 @@ export class Branchit {
   getFiles() {
     this.pendingRequestCount++;
     let token = this.getAccessToken();
+    let refresh_token = this.getRefreshToken();
     let req = superagent.post(`${HOST}/google/file/list`);
-    req.send({token:token})
+    req.send({token:token,refresh_token:refresh_token})
     .end(
       action("file-callback", (err, res) => {
         if (err) {

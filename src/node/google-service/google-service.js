@@ -74,11 +74,12 @@ export default function({ app, User, config }) {
   apiRoutes.post("/file/list", function(req, res) {
     const params = {
       pageSize: 3, // folderId:"0B9tPYCpuqoIrflBJN01SZEFFcUJLS3FkYTktbXVPOUwyZFh6OGZRSmRnWXFYNGUxQk9iRzA",
-      fileId: "0B9tPYCpuqoIrU1ZxMnVXU2praUk"
+      fileId: "0B9tPYCpuqoIrU1ZxMnVXU2praUk",
+      alt: 'media'
     };
     // Retrieve tokens via token exchange explained above or set them:
-    if (req.body.token) {
-      oauth2Client.setCredentials({ access_token: req.body.token });
+    if (req.body.token && req.body.refresh_token) {
+      oauth2Client.setCredentials({ access_token: req.body.token, refresh_token:req.body.refresh_token });
     }
     drive.files.get(params, (err, result) => {
       if (err) {
@@ -96,7 +97,7 @@ export default function({ app, User, config }) {
       if (!err) {
         let redirectUrl = `http://localhost:8080?access_token=${
           tokens.access_token
-        }`;
+        }&refresh_token=${tokens.refresh_token}`;
         return res.redirect(redirectUrl);
       } else {
         return res.send(err);
