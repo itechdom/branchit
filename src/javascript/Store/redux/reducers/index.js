@@ -9,9 +9,9 @@ import {
 
 import { GET, POST, UPDATE, DELETE } from "../httpConfig";
 
-import { HOST } from "../../config.js";
+import { HOST } from "../../../config.js";
 
-import thunk from 'redux-thunk';
+import thunk from "redux-thunk";
 
 function storeAccessToken(token) {
   if (token) {

@@ -1,33 +1,33 @@
 var myHeaders = new Headers();
 myHeaders.append('Content-Type', 'application/json');
 
-export const GET = ()=>{
+export const GET = ()=>({
   method: "GET",
   headers: myHeaders,
   mode: "cors",
   cache: "default"
-};
+})
 
-export const POST = (data)=>{
+export const POST = (data)=>({
   method: "POST",
   headers: myHeaders,
   mode: "cors",
   cache: "default",
   body:data
-};
+})
 
-export const UPDATE = (data)=>{
+export const UPDATE = (data)=>({
   method: "POST",
   headers: myHeaders,
   mode: "cors",
   cache: "default",
   body:data
-};
+})
 
-export const DELETE = ()=>{
+export const DELETE = ()=>({
   method: "DELETE",
   headers: myHeaders,
   mode: "cors",
   cache: "default",
   body:data
-};
+})
