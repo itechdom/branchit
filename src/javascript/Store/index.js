@@ -108,7 +108,7 @@ export class Branchit {
           console.log("err: ", err);
         }
         if(res.status === 401){
-          this.login();
+          // this.login();
         }
         this.pendingRequestCount--;
       })

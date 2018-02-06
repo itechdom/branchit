@@ -13,6 +13,8 @@ import { HOST } from "../../../config.js";
 
 import thunk from "redux-thunk";
 
+//SIDE EFFECTS
+//MAYBE MAKE THEM INTO THUNKS?
 function storeAccessToken(token) {
   if (token) {
     localStorage.setItem("accessToken", token);
@@ -34,6 +36,7 @@ function getRefreshToken() {
   let storedToken = localStorage.getItem("refreshToken");
   return storedToken;
 }
+//END SIDE EFFECTS
 
 function fetchFiles() {
   let token = getAccessToken();
