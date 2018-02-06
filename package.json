@@ -25,6 +25,7 @@
   "homepage": "https://github.com/itechdom/playground#readme",
   "dependencies": {
     "body-parser": "^1.16.0",
+    "color-blend": "^1.0.1",
     "config": "^1.25.1",
     "connect-busboy": "0.0.2",
     "cookie-parser": "^1.4.3",
@@ -38,6 +39,7 @@
     "google-spreadsheets": "^0.5.1",
     "googleapis": "^25.0.0",
     "graphql": "^0.9.1",
+    "immutable": "^3.8.2",
     "jsonwebtoken": "^7.2.1",
     "material-ui": "^0.20.0",
     "mobx": "^3.1.5",
@@ -62,6 +64,8 @@
     "react-router-dom": "^4.0.0",
     "react-tap-event-plugin": "^2.0.1",
     "react-vis": "^1.4.0",
+    "redux-thunk": "^2.2.0",
+    "reselect": "^3.0.1",
     "superagent": "^3.5.1",
     "uuid": "^3.0.1"
   },
