@@ -99,7 +99,10 @@ const deleteMany = (state, ids) => {
 
 export default (state = {}, action) => {
   const { nodeId } = action;
+
+  //initial state
   if (typeof nodeId === "undefined") {
+    console.log("INITIAL STATE",state);
     return state;
   }
 
@@ -107,7 +110,6 @@ export default (state = {}, action) => {
     const descendantIds = getAllDescendantIds(state, nodeId);
     return deleteMany(state, [nodeId, ...descendantIds]);
   }
-
   return {
     ...state,
     [nodeId]: node(state[nodeId], action)
