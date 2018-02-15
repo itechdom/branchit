@@ -27,6 +27,11 @@ export default function({ app, User, config }) {
       req.body.token || req.query.token || req.headers["x-access-token"];
     // decode token
     if (token || req.method === "OPTIONS") {
+      // Retrieve tokens via token exchange explained above or set them:
+      oauth2Client.setCredentials({
+        access_token: token,
+        refresh_token: req.body.refresh_token
+      });
       next();
     } else {
       // if there is no token
@@ -71,27 +76,26 @@ export default function({ app, User, config }) {
   });
 
   apiRoutes.post("/file/list", function(req, res) {
+    // '0B9tPYCpuqoIrflBJN01SZEFFcUJLS3FkYTktbXVPOUwyZFh6OGZRSmRnWXFYNGUxQk9iRzA' in parents
     const params = {
       // pageSize: 3,
       // alt: 'media',
-      q:
-        "'0B9tPYCpuqoIrflBJN01SZEFFcUJLS3FkYTktbXVPOUwyZFh6OGZRSmRnWXFYNGUxQk9iRzA' in parents and title contains '.mup'"
+      q:"title contains '.mup'"
     };
-    // Retrieve tokens via token exchange explained above or set them:
-    if (req.body.token && req.body.refresh_token) {
-      oauth2Client.setCredentials({
-        access_token: req.body.token,
-        refresh_token: req.body.refresh_token
-      });
-    }
-    var retrievePageOfFiles = function(request, result, nextPageToken, callback) {
+
+    var retrievePageOfFiles = function(
+      request,
+      result,
+      nextPageToken,
+      callback
+    ) {
       request
         .then(function(resp) {
           result = result.concat(resp.data.items);
           var nextPageToken = resp.nextPageToken;
           if (nextPageToken) {
             request = getFiles(nextPageToken);
-            retrievePageOfFiles(request,result, nextPageToken, callback);
+            retrievePageOfFiles(request, result, nextPageToken, callback);
           } else {
             callback(result);
           }
@@ -101,7 +105,7 @@ export default function({ app, User, config }) {
         });
     };
     function getFiles(nextPageToken) {
-      if(nextPageToken){
+      if (nextPageToken) {
         params.nextPageToken = nextPageToken;
       }
       return new Promise((resolve, reject) => {
@@ -114,8 +118,8 @@ export default function({ app, User, config }) {
       });
     }
     var request = getFiles();
-    retrievePageOfFiles(request,[], null, results => {
-      res.send(results);
+    retrievePageOfFiles(request, [], null, results => {
+      res.send(results.map(result=>result.title));
     });
   });
 
