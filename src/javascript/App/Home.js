@@ -31,8 +31,14 @@ export default class Home extends React.Component {
     this.props.branchitStore.filterFilesByTitle(title);
   };
 
+  onNewRequest = (title)=>{
+    this.props.branchitStore.filterFilesByTitle(title);
+    //download the file
+    this.props.branchitStore.downloadFile();
+  }
+
   render() {
-    let { ideaList, level, fileList, files } = this.props.branchitStore;
+    let { ideaList, level, fileList, files, onFileDownload, ideas } = this.props.branchitStore;
     let branchitStore = this.props.branchitStore;
     return (
       <div>
@@ -47,6 +53,7 @@ export default class Home extends React.Component {
               hintText="Search Mindmaps"
               dataSource={files}
               onUpdateInput={this.handleUpdateInput}
+              onNewRequest={this.onNewRequest}
               floatingLabelText="Type the name of the file"
               id="home__search"
               className="grid-item"
@@ -63,7 +70,7 @@ export default class Home extends React.Component {
                 onClick={() => { branchitStore.incrementLevel() }}
             /> */}
           <Tree
-            nodeList={ideaList}
+            nodeList={ideas}
             level={level}
             handleNodeToggle={node => {
               branchitStore.toggleChildVisible(node);

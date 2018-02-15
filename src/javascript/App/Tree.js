@@ -100,7 +100,7 @@ export class Node extends React.Component {
     }
     return (
       <span>
-        <LeafNode />
+        {/* <LeafNode /> */}
         <IconButton onClick={this.props.handleNodeToggle}>
           <FontIcon className="fa fa-leaf" />
         </IconButton>

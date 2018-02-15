@@ -122,22 +122,6 @@ const Footer = () => (
 
 let branchitStore = new Branchit();
 
-//change the tree to Ideas so we can track any changes to this tree
-traverse(data);
-
-branchitStore.ideaList = data.ideas;
-
-function traverse(idea) {
-  let ideas = idea.ideas;
-  if (ideas) {
-    Object.keys(ideas).map((key) => {
-      //do the switching here ...
-      ideas[key] = new Idea(ideas[key])
-      traverse(ideas[key]);
-    });
-  }
-}
-
 ReactDOM.render(
   <Provider branchitStore={branchitStore}>
     <Router history={hashHistory}>

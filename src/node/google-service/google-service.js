@@ -123,26 +123,23 @@ export default function({ app, User, config }) {
     });
   });
 
-  apiRoutes.get("/file/download", (req, res) => {
+  apiRoutes.post("/file/download", (req, res) => {
     var fileId = req.body.file_id;
     const params = {
       fileId: fileId,
       alt: "media"
     };
     drive.files
-      .get(params, (err, result) => {
-        if (err) {
-          return reject(err);
-        }
-        return resolve(result);
+      .get(params,(err,result)=>{
+        res.send(result.data);
       })
-      .on("end", function() {
-        console.log("Done");
-      })
-      .on("error", function(err) {
-        console.log("Error during download", err);
-      })
-      .pipe(res);
+      // .on("end", function() {
+      //   console.log("Done");
+      // })
+      // .on("error", function(err) {
+      //   console.log("Error during download", err);
+      // })
+      // .pipe(res);
   });
 
   apiRoutes.get("/auth/callback", (req, res) => {

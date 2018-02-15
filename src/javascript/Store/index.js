@@ -6,14 +6,13 @@ import queryString from "query-string";
 import moment from "moment";
 
 export class Branchit {
-  @observable ideaList = [];
+  @observable ideaList = {};
   @observable level;
   @observable maxLevel;
   @observable pendingRequestCount;
   @observable isLoggedIn = false;
   @observable fileList = [];
   @observable filteredFileList = [];
-  @observable previewedFile;
   accessToken;
   minLevel;
 
@@ -23,6 +22,16 @@ export class Branchit {
     const parsed = queryString.parse(location.search);
     this.accessToken = this.storeAccessToken(parsed.access_token);
     this.refreshToken = this.storeRefreshToken(parsed.refresh_token);
+  }
+
+  traverse(idea) {
+    let ideas = idea.ideas;
+    if (ideas) {
+      Object.keys(ideas).map((key) => {
+        ideas[key] = new Idea(ideas[key])
+        this.traverse(ideas[key]);
+      });
+    }
   }
 
   storeAccessToken(token) {
@@ -60,6 +69,13 @@ export class Branchit {
     return this.filteredFileList.map((file)=>{
       return file.title;
     });
+  }
+
+  @computed get ideas(){
+    if(this.ideaList.ideas){
+      return this.ideaList.ideas;
+    }
+    return []
   }
 
   @action filterFilesByTitle(title){
@@ -132,7 +148,8 @@ export class Branchit {
   }
 
   @action
-  downloadFile(file) {
+  downloadFile() {
+    var file = this.filteredFileList[0];
     this.pendingRequestCount++;
     let token = this.getAccessToken();
     let refresh_token = this.getRefreshToken();
@@ -144,9 +161,11 @@ export class Branchit {
           console.log("err: ", err);
         }
         if(res.status === 401){
-          console.log(err);
-          // this.login();
+          return console.log(err);
         }
+        var ideas = res.body;
+        this.traverse(ideas);
+        this.ideaList = ideas;
         this.pendingRequestCount--;
       })
     );
