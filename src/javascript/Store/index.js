@@ -81,7 +81,6 @@ export class Branchit {
   @action
   isAuthenticated() {
     this.pendingRequestCount++;
-    //Authorization: Bearer 0b79bab50daca910b000d4f1a2b675d604257e42
     let req = superagent.get(`${HOST}/file/list`);
     req.end(
       action("login-callback", (err, res) => {
@@ -108,6 +107,7 @@ export class Branchit {
           console.log("err: ", err);
         }
         if(res.status === 401){
+          console.log(err);
           // this.login();
         }
         this.pendingRequestCount--;

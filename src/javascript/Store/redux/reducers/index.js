@@ -13,34 +13,7 @@ import { HOST } from "../../../config.js";
 
 import thunk from "redux-thunk";
 
-//SIDE EFFECTS
-//MAYBE MAKE THEM INTO THUNKS?
-function storeAccessToken(token) {
-  if (token) {
-    localStorage.setItem("accessToken", token);
-  }
-}
-
-function getAccessToken() {
-  let storedToken = localStorage.getItem("accessToken");
-  return storedToken;
-}
-
-function storeRefreshToken(token) {
-  if (token) {
-    localStorage.setItem("refreshToken", token);
-  }
-}
-
-function getRefreshToken() {
-  let storedToken = localStorage.getItem("refreshToken");
-  return storedToken;
-}
-//END SIDE EFFECTS
-
 function fetchFiles() {
-  let token = getAccessToken();
-  let refresh_token = getRefreshToken();
   return fetch(`${HOST}/google/file/list`, POST({ token: token }));
 }
 
@@ -90,7 +63,9 @@ const node = (state, action) => {
 
 const getAllDescendantIds = (state, nodeId) =>
   state[nodeId].childIds.reduce(
-    (acc, childId) => [...acc, childId, ...getAllDescendantIds(state, childId)],
+    (acc, childId) => {
+      return [...acc, childId, ...getAllDescendantIds(state, childId)]
+    },
     []
   );
 

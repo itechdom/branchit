@@ -25,10 +25,9 @@ export default function({ app, User, config }) {
     // check header or url parameters or post parameters for token
     var token =
       req.body.token || req.query.token || req.headers["x-access-token"];
-    console.log(token);
-    return next();
     // decode token
-    if (token) {
+    if (token || req.method === "OPTIONS") {
+      next();
     } else {
       // if there is no token
       // return an error
@@ -73,21 +72,50 @@ export default function({ app, User, config }) {
 
   apiRoutes.post("/file/list", function(req, res) {
     const params = {
-      pageSize: 3, // folderId:"0B9tPYCpuqoIrflBJN01SZEFFcUJLS3FkYTktbXVPOUwyZFh6OGZRSmRnWXFYNGUxQk9iRzA",
-      fileId: "0B9tPYCpuqoIrU1ZxMnVXU2praUk",
-      alt: 'media'
+      // pageSize: 3,
+      // alt: 'media',
+      q:
+        "'0B9tPYCpuqoIrflBJN01SZEFFcUJLS3FkYTktbXVPOUwyZFh6OGZRSmRnWXFYNGUxQk9iRzA' in parents and title contains '.mup'"
     };
     // Retrieve tokens via token exchange explained above or set them:
     if (req.body.token && req.body.refresh_token) {
-      oauth2Client.setCredentials({ access_token: req.body.token, refresh_token:req.body.refresh_token });
+      oauth2Client.setCredentials({
+        access_token: req.body.token,
+        refresh_token: req.body.refresh_token
+      });
     }
-    drive.files.get(params, (err, result) => {
-      if (err) {
-        console.log(err);
-        return res.sendStatus(401).send(err);
+    var retrievePageOfFiles = function(request, result, nextPageToken, callback) {
+      request
+        .then(function(resp) {
+          result = result.concat(resp.data.items);
+          var nextPageToken = resp.nextPageToken;
+          if (nextPageToken) {
+            request = getFiles(nextPageToken);
+            retrievePageOfFiles(request,result, nextPageToken, callback);
+          } else {
+            callback(result);
+          }
+        })
+        .catch(err => {
+          res.status(500).send(err);
+        });
+    };
+    function getFiles(nextPageToken) {
+      if(nextPageToken){
+        params.nextPageToken = nextPageToken;
       }
-      console.log(result);
-      return res.send(result.data);
+      return new Promise((resolve, reject) => {
+        drive.files.list(params, (err, result) => {
+          if (err) {
+            return reject(err);
+          }
+          return resolve(result);
+        });
+      });
+    }
+    var request = getFiles();
+    retrievePageOfFiles(request,[], null, results => {
+      res.send(results);
     });
   });
 
