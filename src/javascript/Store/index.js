@@ -11,6 +11,9 @@ export class Branchit {
   @observable maxLevel;
   @observable pendingRequestCount;
   @observable isLoggedIn = false;
+  @observable fileList = [];
+  @observable filteredFileList = [];
+  @observable previewedFile;
   accessToken;
   minLevel;
 
@@ -51,6 +54,18 @@ export class Branchit {
     } else {
       console.log("no auth token");
     }
+  }
+
+  @computed get files(){
+    return this.filteredFileList.map((file)=>{
+      return file.title;
+    });
+  }
+
+  @action filterFilesByTitle(title){
+    this.filteredFileList = this.fileList.filter((file)=>{
+      return file.title.indexOf(title) !== -1;
+    })
   }
 
   @action
@@ -101,6 +116,28 @@ export class Branchit {
     let refresh_token = this.getRefreshToken();
     let req = superagent.post(`${HOST}/google/file/list`);
     req.send({token:token,refresh_token:refresh_token})
+    .end(
+      action("file-callback", (err, res) => {
+        if (err) {
+          console.log("err: ", err);
+        }
+        if(res.status === 401){
+          console.log(err);
+          // this.login();
+        }
+        this.fileList.push(...res.body);
+        this.pendingRequestCount--;
+      })
+    );
+  }
+
+  @action
+  downloadFile(file) {
+    this.pendingRequestCount++;
+    let token = this.getAccessToken();
+    let refresh_token = this.getRefreshToken();
+    let req = superagent.post(`${HOST}/google/file/download`);
+    req.send({token:token,refresh_token:refresh_token,file_id:file.id})
     .end(
       action("file-callback", (err, res) => {
         if (err) {

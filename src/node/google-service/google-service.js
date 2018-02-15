@@ -80,7 +80,7 @@ export default function({ app, User, config }) {
     const params = {
       // pageSize: 3,
       // alt: 'media',
-      q:"title contains '.mup'"
+      q: "title contains '.mup'"
     };
 
     var retrievePageOfFiles = function(
@@ -119,8 +119,30 @@ export default function({ app, User, config }) {
     }
     var request = getFiles();
     retrievePageOfFiles(request, [], null, results => {
-      res.send(results.map(result=>result.title));
+      res.send(results);
     });
+  });
+
+  apiRoutes.get("/file/download", (req, res) => {
+    var fileId = req.body.file_id;
+    const params = {
+      fileId: fileId,
+      alt: "media"
+    };
+    drive.files
+      .get(params, (err, result) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve(result);
+      })
+      .on("end", function() {
+        console.log("Done");
+      })
+      .on("error", function(err) {
+        console.log("Error during download", err);
+      })
+      .pipe(res);
   });
 
   apiRoutes.get("/auth/callback", (req, res) => {
