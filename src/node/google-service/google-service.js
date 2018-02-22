@@ -26,7 +26,8 @@ export default function({ app, User, config }) {
     var token =
       req.body.token || req.query.token || req.headers["x-access-token"];
     // decode token
-    if (token || req.method === "OPTIONS") {
+    console.log(req.url);
+    if (token || req.method === "OPTIONS" || req.url.indexOf("/auth")!== -1) {
       // Retrieve tokens via token exchange explained above or set them:
       oauth2Client.setCredentials({
         access_token: token,
@@ -80,7 +81,7 @@ export default function({ app, User, config }) {
     const params = {
       // pageSize: 3,
       // alt: 'media',
-      q: "title contains '.mup'"
+      q: "title contains 'Self.mup'"
     };
 
     var retrievePageOfFiles = function(
@@ -129,17 +130,19 @@ export default function({ app, User, config }) {
       fileId: fileId,
       alt: "media"
     };
-    drive.files
-      .get(params,(err,result)=>{
-        res.send(result.data);
-      })
-      // .on("end", function() {
-      //   console.log("Done");
-      // })
-      // .on("error", function(err) {
-      //   console.log("Error during download", err);
-      // })
-      // .pipe(res);
+    drive.files.get(params, (err, result) => {
+      console.log("_____+++++");
+      console.log(result);
+      console.log("_____+++++");
+      res.send(result.data);
+    });
+    // .on("end", function() {
+    //   console.log("Done");
+    // })
+    // .on("error", function(err) {
+    //   console.log("Error during download", err);
+    // })
+    // .pipe(res);
   });
 
   apiRoutes.get("/auth/callback", (req, res) => {

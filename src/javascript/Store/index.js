@@ -27,8 +27,8 @@ export class Branchit {
   traverse(idea) {
     let ideas = idea.ideas;
     if (ideas) {
-      Object.keys(ideas).map((key) => {
-        ideas[key] = new Idea(ideas[key])
+      Object.keys(ideas).map(key => {
+        ideas[key] = new Idea(ideas[key]);
         this.traverse(ideas[key]);
       });
     }
@@ -65,23 +65,26 @@ export class Branchit {
     }
   }
 
-  @computed get files(){
-    return this.filteredFileList.map((file)=>{
+  @computed
+  get files() {
+    return this.filteredFileList.map(file => {
       return file.title;
     });
   }
 
-  @computed get ideas(){
-    if(this.ideaList.ideas){
+  @computed
+  get ideas() {
+    if (this.ideaList.ideas) {
       return this.ideaList.ideas;
     }
-    return []
+    return [];
   }
 
-  @action filterFilesByTitle(title){
-    this.filteredFileList = this.fileList.filter((file)=>{
+  @action
+  filterFilesByTitle(title) {
+    this.filteredFileList = this.fileList.filter(file => {
       return file.title.indexOf(title) !== -1;
-    })
+    });
   }
 
   @action
@@ -131,13 +134,12 @@ export class Branchit {
     let token = this.getAccessToken();
     let refresh_token = this.getRefreshToken();
     let req = superagent.post(`${HOST}/google/file/list`);
-    req.send({token:token,refresh_token:refresh_token})
-    .end(
+    req.send({ token: token, refresh_token: refresh_token }).end(
       action("file-callback", (err, res) => {
         if (err) {
           console.log("err: ", err);
         }
-        if(res.status === 401){
+        if (res.status === 401) {
           console.log(err);
           // this.login();
         }
@@ -147,6 +149,32 @@ export class Branchit {
     );
   }
 
+  /**
+   * Download a file's content.
+   *
+   * @param {File} file Drive File instance.
+   * @param {Function} callback Function to call when the request is complete.
+   */
+  download(callback) {
+    var file = this.filteredFileList[0];
+    if (file.downloadUrl) {
+      var accessToken = this.getAccessToken();
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", file.downloadUrl);
+      xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+      xhr.onload = function() {
+        callback(xhr.responseText);
+      };
+      xhr.onerror = function() {
+        console.log("ERROR")
+        callback(null);
+      };
+      xhr.send();
+    } else {
+      callback("NO FILE!");
+    }
+  }
+
   @action
   downloadFile() {
     var file = this.filteredFileList[0];
@@ -154,21 +182,22 @@ export class Branchit {
     let token = this.getAccessToken();
     let refresh_token = this.getRefreshToken();
     let req = superagent.post(`${HOST}/google/file/download`);
-    req.send({token:token,refresh_token:refresh_token,file_id:file.id})
-    .end(
-      action("file-callback", (err, res) => {
-        if (err) {
-          console.log("err: ", err);
-        }
-        if(res.status === 401){
-          return console.log(err);
-        }
-        var ideas = res.body;
-        this.traverse(ideas);
-        this.ideaList = ideas;
-        this.pendingRequestCount--;
-      })
-    );
+    req
+      .send({ token: token, refresh_token: refresh_token, file_id: file.id })
+      .end(
+        action("file-callback", (err, res) => {
+          if (err) {
+            console.log("err: ", err);
+          }
+          if (res.status === 401) {
+            return console.log(err);
+          }
+          var ideas = res.body;
+          this.traverse(ideas);
+          this.ideaList = ideas;
+          this.pendingRequestCount--;
+        })
+      );
   }
 }
 

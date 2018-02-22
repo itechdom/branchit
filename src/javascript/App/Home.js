@@ -35,6 +35,9 @@ export default class Home extends React.Component {
     this.props.branchitStore.filterFilesByTitle(title);
     //download the file
     this.props.branchitStore.downloadFile();
+    this.props.branchitStore.download((data)=>{
+      console.log(data);
+    })
   }
 
   render() {

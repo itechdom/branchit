@@ -28,6 +28,7 @@ app.use(function(req, res, next) {
 // Import web services ========================================
 // =================================================================
 var User   = require('./branchit-service/models/user'); // get our mongoose model
+var Idea  = require('./branchit-service/models/idea'); // get our mongoose model
 
 import passportService from './passport-service/passport-service.js'
 const passportApi = passportService({app,config,User});
@@ -36,7 +37,7 @@ import googleService from './google-service/google-service.js'
 const googleApi = googleService({app,config,User});
 
 import branchitService from './branchit-service/branchit-service.js';
-const branchitApi = branchitService({app});
+const branchitApi = branchitService({app,Idea});
 
 // use body parser so we can get info from POST and/or URL parameters
 app.use(bodyParser.urlencoded({ extended: false }));

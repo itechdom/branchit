@@ -18,7 +18,7 @@ export class Tree extends React.Component {
     super(props);
   }
 
-  renderNode(node, level, visibleLevel) {
+  renderNode(node, level, visibleLevel,key) {
     level++;
     let visible = visibleLevel <= level;
     //does this node have ideas?
@@ -27,6 +27,7 @@ export class Tree extends React.Component {
         <div>
           {visible ? (
             <Node
+              key={key}
               title={node.title}
               visible={node.visible}
               handleNodeToggle={() => this.props.handleNodeToggle(node)}
@@ -38,7 +39,7 @@ export class Tree extends React.Component {
           {node.visible ? (
             <ul style={visible ? {} : { padding: "0px" }}>
               {Object.keys(node.ideas).map(key => {
-                return this.renderNode(node.ideas[key], level, visibleLevel);
+                return this.renderNode(node.ideas[key], level, visibleLevel,key);
               })}
             </ul>
           ) : (
@@ -50,6 +51,7 @@ export class Tree extends React.Component {
     if (visible) {
       return (
         <Node
+          key={key}
           title={node.title}
           visible={node.visible}
           handleNodeToggle={() => this.props.handleNodeToggle(node)}
@@ -66,7 +68,7 @@ export class Tree extends React.Component {
         {Object.keys(this.props.nodeList).map(key => {
           return (
             <List>
-              {this.renderNode(this.props.nodeList[key], 0, this.props.level)}
+              {this.renderNode(this.props.nodeList[key], 0, this.props.level,key)}
             </List>
           );
         })}
