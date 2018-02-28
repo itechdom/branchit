@@ -26,7 +26,6 @@ export default function({ app, User, config }) {
     var token =
       req.body.token || req.query.token || req.headers["x-access-token"];
     // decode token
-    console.log(req.url);
     if (token || req.method === "OPTIONS" || req.url.indexOf("/auth")!== -1) {
       // Retrieve tokens via token exchange explained above or set them:
       oauth2Client.setCredentials({
@@ -81,7 +80,56 @@ export default function({ app, User, config }) {
     const params = {
       // pageSize: 3,
       // alt: 'media',
-      q: "title contains 'Self.mup'"
+      q: "title contains '.mup'"
+    };
+
+    var retrievePageOfFiles = function(
+      request,
+      result,
+      nextPageToken,
+      callback
+    ) {
+      request
+        .then(function(resp) {
+          result = result.concat(resp.data.items);
+          var nextPageToken = resp.nextPageToken;
+          if (nextPageToken) {
+            request = getFiles(nextPageToken);
+            retrievePageOfFiles(request, result, nextPageToken, callback);
+          } else {
+            callback(result);
+          }
+        })
+        .catch(err => {
+          res.status(500).send(err);
+        });
+    };
+    function getFiles(nextPageToken) {
+      if (nextPageToken) {
+        params.nextPageToken = nextPageToken;
+      }
+      return new Promise((resolve, reject) => {
+        drive.files.list(params, (err, result) => {
+          if (err) {
+            return reject(err);
+          }
+          return resolve(result);
+        });
+      });
+    }
+    var request = getFiles();
+    retrievePageOfFiles(request, [], null, results => {
+      res.send(results);
+    });
+  });
+
+  apiRoutes.post("/file/list/manual", function(req, res) {
+    // '0B9tPYCpuqoIrflBJN01SZEFFcUJLS3FkYTktbXVPOUwyZFh6OGZRSmRnWXFYNGUxQk9iRzA' in parents
+    let fileName = req.body.fileName;
+    const params = {
+      // pageSize: 3,
+      // alt: 'media',
+      q: `title contains '${fileName}.mup'`
     };
 
     var retrievePageOfFiles = function(

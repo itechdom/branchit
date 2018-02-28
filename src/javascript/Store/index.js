@@ -129,12 +129,19 @@ export class Branchit {
   }
 
   @action
-  getFiles() {
+  getFiles(title) {
     this.pendingRequestCount++;
     let token = this.getAccessToken();
     let refresh_token = this.getRefreshToken();
-    let req = superagent.post(`${HOST}/google/file/list`);
-    req.send({ token: token, refresh_token: refresh_token }).end(
+    let body = { token: token, refresh_token: refresh_token };
+    let req;
+    if (title) {
+      req = superagent.post(`${HOST}/google/file/list/manual`);
+      body.fileName = title;
+    } else {
+      req = superagent.post(`${HOST}/google/file/list`);
+    }
+    req.send(body).end(
       action("file-callback", (err, res) => {
         if (err) {
           console.log("err: ", err);
@@ -166,7 +173,7 @@ export class Branchit {
         callback(xhr.responseText);
       };
       xhr.onerror = function() {
-        console.log("ERROR")
+        console.log("ERROR");
         callback(null);
       };
       xhr.send();

@@ -30,6 +30,10 @@ export default class Home extends React.Component {
   handleUpdateInput = (title) => {
     this.props.branchitStore.filterFilesByTitle(title);
   };
+  
+  onManualSearch = (title) => {
+    this.props.branchitStore.getFiles(title);
+  };
 
   onNewRequest = (title)=>{
     this.props.branchitStore.filterFilesByTitle(title);
