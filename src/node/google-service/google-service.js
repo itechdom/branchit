@@ -26,7 +26,7 @@ export default function({ app, User, config }) {
     var token =
       req.body.token || req.query.token || req.headers["x-access-token"];
     // decode token
-    if (token || req.method === "OPTIONS" || req.url.indexOf("/auth")!== -1) {
+    if (token || req.method === "OPTIONS" || req.url.indexOf("/auth") !== -1) {
       // Retrieve tokens via token exchange explained above or set them:
       oauth2Client.setCredentials({
         access_token: token,

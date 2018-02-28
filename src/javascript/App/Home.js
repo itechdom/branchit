@@ -22,30 +22,36 @@ import { observer, Provider, inject } from "mobx-react";
 @inject("branchitStore")
 @observer
 export default class Home extends React.Component {
-
   constructor(props) {
     super(props);
   }
 
-  handleUpdateInput = (title) => {
+  handleUpdateInput = title => {
     this.props.branchitStore.filterFilesByTitle(title);
   };
-  
-  onManualSearch = (title) => {
+
+  onManualSearch = title => {
     this.props.branchitStore.getFiles(title);
   };
 
-  onNewRequest = (title)=>{
+  onNewRequest = title => {
     this.props.branchitStore.filterFilesByTitle(title);
     //download the file
     this.props.branchitStore.downloadFile();
-    this.props.branchitStore.download((data)=>{
+    this.props.branchitStore.download(data => {
       console.log(data);
-    })
-  }
+    });
+  };
 
   render() {
-    let { ideaList, level, fileList, files, onFileDownload, ideas } = this.props.branchitStore;
+    let {
+      ideaList,
+      level,
+      fileList,
+      files,
+      onFileDownload,
+      ideas
+    } = this.props.branchitStore;
     let branchitStore = this.props.branchitStore;
     return (
       <div>

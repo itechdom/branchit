@@ -10,7 +10,6 @@ export default function auth({ app, Idea }) {
   apiRoutes.get("/", function(req, res) {
     res.send("Hello! Hello service is working");
   });
-  apiRoutes.get("/populate-db", function(req, res) {
-  });
+  apiRoutes.get("/populate-db", function(req, res) {});
   return apiRoutes;
 }
