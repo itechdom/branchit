@@ -79,7 +79,7 @@ export default function({ app, User, config }) {
     // '0B9tPYCpuqoIrflBJN01SZEFFcUJLS3FkYTktbXVPOUwyZFh6OGZRSmRnWXFYNGUxQk9iRzA' in parents
     const params = {
       pageSize: 2,
-      q: "title contains '.mup'"
+      q: "title contains 'Formal' OR title contains 'Social' OR title contains 'Natural'"
     };
 
     var retrievePageOfFiles = function(

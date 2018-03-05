@@ -14,7 +14,9 @@ import {
   GridTile,
   List,
   ListItem,
-  AutoComplete
+  AutoComplete,
+  CircularProgress,
+  RefreshIndicator
 } from "material-ui";
 import { Tree } from "./Tree.js";
 import React from "react";
@@ -55,6 +57,13 @@ export default class Home extends React.Component {
     let branchitStore = this.props.branchitStore;
     return (
       <div>
+        <RefreshIndicator
+          size={40}
+          left={10}
+          top={0}
+          status={branchitStore.loading?"loading":"hide"}
+          loadingColor={'green'}
+        />
         <List>
           <ListItem
             disabled={true}

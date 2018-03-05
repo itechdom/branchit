@@ -11,6 +11,7 @@ export class Branchit {
   @observable maxLevel;
   @observable pendingRequestCount;
   @observable isLoggedIn = false;
+  @observable loading = false;
   @observable fileList = [];
   @observable filteredFileList = [];
   accessToken;
@@ -131,6 +132,7 @@ export class Branchit {
   @action
   getFiles(title) {
     this.pendingRequestCount++;
+    this.loading = true;
     let token = this.getAccessToken();
     let refresh_token = this.getRefreshToken();
     let body = { token: token, refresh_token: refresh_token };
@@ -150,6 +152,7 @@ export class Branchit {
           console.log(err);
           // this.login();
         }
+        this.loading = false;
         this.fileList.push(...res.body);
         this.pendingRequestCount--;
       })
@@ -164,12 +167,14 @@ export class Branchit {
    */
   download(callback) {
     var file = this.filteredFileList[0];
+    this.loading = true;
     if (file.downloadUrl) {
       var accessToken = this.getAccessToken();
       var xhr = new XMLHttpRequest();
       xhr.open("GET", file.downloadUrl);
       xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-      xhr.onload = function() {
+      xhr.onload = ()=>{
+        this.loading = false;
         callback(xhr.responseText);
       };
       xhr.onerror = function() {
