@@ -9,16 +9,18 @@ import {
   BottomNavigationItem,
   FontIcon,
   IconButton,
-  Snackbar
+  FlatButton,
+  Snackbar,
+  Dialog
 } from "material-ui";
-import LeafNode from "./LeafNode.js";
 import React from "react";
+import { observer, Provider, inject } from "mobx-react";
 export class Tree extends React.Component {
   constructor(props) {
     super(props);
   }
 
-  renderNode(node, level, visibleLevel,key) {
+  renderNode(node, level, visibleLevel, key) {
     level++;
     let visible = visibleLevel <= level;
     //does this node have ideas?
@@ -31,6 +33,7 @@ export class Tree extends React.Component {
               title={node.title}
               visible={node.visible}
               handleNodeToggle={() => this.props.handleNodeToggle(node)}
+              handleNodeEdit={() => this.props.handleNodeEdit(node)}
               hasChildren={true}
             />
           ) : (
@@ -39,7 +42,12 @@ export class Tree extends React.Component {
           {node.visible ? (
             <ul style={visible ? {} : { padding: "0px" }}>
               {Object.keys(node.ideas).map(key => {
-                return this.renderNode(node.ideas[key], level, visibleLevel,key);
+                return this.renderNode(
+                  node.ideas[key],
+                  level,
+                  visibleLevel,
+                  key
+                );
               })}
             </ul>
           ) : (
@@ -55,6 +63,7 @@ export class Tree extends React.Component {
           title={node.title}
           visible={node.visible}
           handleNodeToggle={() => this.props.handleNodeToggle(node)}
+          handleNodeEdit={() => this.props.handleNodeEdit(node)}
           hasChildren={false}
         />
       );
@@ -65,10 +74,20 @@ export class Tree extends React.Component {
   render() {
     return (
       <div>
+        <NodeEditDialog 
+        node={this.props.nodeEdited}
+        handleOpen={this.props.handleNodeEditOpen}
+        handleClose={this.props.handleNodeEditClose}
+        />
         {Object.keys(this.props.nodeList).map(key => {
           return (
             <List>
-              {this.renderNode(this.props.nodeList[key], 0, this.props.level,key)}
+              {this.renderNode(
+                this.props.nodeList[key],
+                0,
+                this.props.level,
+                key
+              )}
             </List>
           );
         })}
@@ -102,7 +121,6 @@ export class Node extends React.Component {
     }
     return (
       <span>
-        {/* <LeafNode /> */}
         <IconButton onClick={this.props.handleNodeToggle}>
           <FontIcon className="fa fa-leaf" />
         </IconButton>
@@ -122,10 +140,48 @@ export class Node extends React.Component {
             {this.props.title}
           </a>
         )}
-        <IconButton className="pull-right">
+        <IconButton onClick={this.props.handleNodeEdit} className="pull-right">
           <FontIcon className="material-icons">create</FontIcon>
         </IconButton>
       </ListItem>
+    );
+  }
+}
+@inject("branchitStore")
+@observer export class NodeEditDialog extends React.Component {
+
+  handleOpen = () => {
+    this.props.branchitStore.nodeEditOpen = true;
+  };
+
+  handleClose = () => {
+    this.props.branchitStore.nodeEditOpen = false;
+  };
+
+  render() {
+    let branchitStore = this.props.branchitStore;
+    const actions = [
+      <FlatButton label="Cancel" primary={true} onClick={this.handleClose} />,
+      <FlatButton
+        label="Submit"
+        primary={true}
+        keyboardFocused={true}
+        onClick={this.handleClose}
+      />
+    ];
+    return (
+      <div>
+        <Dialog
+          title={branchitStore.nodeEdited.title}
+          actions={actions}
+          modal={false}
+          open={branchitStore.nodeEditOpen}
+          onRequestClose={this.handleClose}
+          autoScrollBodyContent={true}
+        >
+        {branchitStore.nodeEdited.note}
+        </Dialog>
+      </div>
     );
   }
 }

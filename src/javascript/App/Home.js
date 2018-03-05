@@ -61,8 +61,8 @@ export default class Home extends React.Component {
           size={40}
           left={10}
           top={0}
-          status={branchitStore.loading?"loading":"hide"}
-          loadingColor={'green'}
+          status={branchitStore.loading ? "loading" : "hide"}
+          loadingColor={"green"}
         />
         <List>
           <ListItem
@@ -93,9 +93,21 @@ export default class Home extends React.Component {
             /> */}
           <Tree
             nodeList={ideas}
+            nodeEdited={branchitStore.nodeEdited}
+            nodeEditedOpen={branchitStore.nodeEditedOpen}
             level={level}
             handleNodeToggle={node => {
               branchitStore.toggleChildVisible(node);
+            }}
+            handleNodeEdit={node => {
+              branchitStore.nodeEdited = node;
+              branchitStore.nodeEditOpen = true;
+            }}
+            handleNodeEditClose={()=>{
+              branchitStore.nodeEditedOpen = false;
+            }}
+            handleNodeEditOpen={()=>{
+              branchitStore.nodeEditedOpen = true;
             }}
           />
         </div>

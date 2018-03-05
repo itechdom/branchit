@@ -12,6 +12,8 @@ export class Branchit {
   @observable pendingRequestCount;
   @observable isLoggedIn = false;
   @observable loading = false;
+  @observable nodeEditOpen = false;
+  @observable nodeEdited = { title: "Hello", note:"TEXT" };
   @observable fileList = [];
   @observable filteredFileList = [];
   accessToken;
@@ -173,7 +175,7 @@ export class Branchit {
       var xhr = new XMLHttpRequest();
       xhr.open("GET", file.downloadUrl);
       xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
-      xhr.onload = ()=>{
+      xhr.onload = () => {
         this.loading = false;
         callback(xhr.responseText);
       };
@@ -220,6 +222,7 @@ export class Idea {
   style;
   ideas;
   date;
+  text;
   @observable visible = false;
   constructor(obj) {
     this.id = obj.id;
@@ -228,5 +231,8 @@ export class Idea {
     this.style = obj.style;
     this.visible = false;
     this.date = obj.date || moment();
+    if (obj.attr && obj.attr.note && obj.attr.note.text) {
+      this.note = obj.attr.note.text;
+    }
   }
 }
