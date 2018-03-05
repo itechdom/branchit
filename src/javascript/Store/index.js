@@ -234,5 +234,8 @@ export class Idea {
     if (obj.attr && obj.attr.note && obj.attr.note.text) {
       this.note = obj.attr.note.text;
     }
+    if(obj.attr && obj.attr.attachment && obj.attr.attachment.content){
+      this.note = obj.attr.attachment.content;
+    }
   }
 }

@@ -32,6 +32,7 @@ export class Tree extends React.Component {
               key={key}
               title={node.title}
               visible={node.visible}
+              hasNote={!!node.note}
               handleNodeToggle={() => this.props.handleNodeToggle(node)}
               handleNodeEdit={() => this.props.handleNodeEdit(node)}
               hasChildren={true}
@@ -74,10 +75,10 @@ export class Tree extends React.Component {
   render() {
     return (
       <div>
-        <NodeEditDialog 
-        node={this.props.nodeEdited}
-        handleOpen={this.props.handleNodeEditOpen}
-        handleClose={this.props.handleNodeEditClose}
+        <NodeEditDialog
+          node={this.props.nodeEdited}
+          handleOpen={this.props.handleNodeEditOpen}
+          handleClose={this.props.handleNodeEditClose}
         />
         {Object.keys(this.props.nodeList).map(key => {
           return (
@@ -140,6 +141,12 @@ export class Node extends React.Component {
             {this.props.title}
           </a>
         )}
+        {
+          (this.props.hasNote)?
+          <IconButton className="pull-right">
+            <FontIcon className="material-icons">note</FontIcon>
+          </IconButton>:""
+        }
         <IconButton onClick={this.props.handleNodeEdit} className="pull-right">
           <FontIcon className="material-icons">create</FontIcon>
         </IconButton>
@@ -148,8 +155,8 @@ export class Node extends React.Component {
   }
 }
 @inject("branchitStore")
-@observer export class NodeEditDialog extends React.Component {
-
+@observer
+export class NodeEditDialog extends React.Component {
   handleOpen = () => {
     this.props.branchitStore.nodeEditOpen = true;
   };
@@ -179,7 +186,7 @@ export class Node extends React.Component {
           onRequestClose={this.handleClose}
           autoScrollBodyContent={true}
         >
-        {branchitStore.nodeEdited.note}
+          {branchitStore.nodeEdited.note}
         </Dialog>
       </div>
     );
