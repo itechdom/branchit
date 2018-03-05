@@ -140,10 +140,7 @@ export default function({ app, User, config }) {
         .then(function(resp) {
           result = result.concat(resp.data.items);
           var nextPageToken = resp.data.nextPageToken;
-          console.log(nextPageToken);
           if (nextPageToken) {
-            console.log("NEXT PAGE!");
-            console.log(nextPageToken);
             request = getFiles(nextPageToken);
             retrievePageOfFiles(request, result, nextPageToken, callback);
           } else {
@@ -180,18 +177,8 @@ export default function({ app, User, config }) {
       alt: "media"
     };
     drive.files.get(params, (err, result) => {
-      console.log("_____+++++");
-      console.log(result);
-      console.log("_____+++++");
       res.send(result.data);
     });
-    // .on("end", function() {
-    //   console.log("Done");
-    // })
-    // .on("error", function(err) {
-    //   console.log("Error during download", err);
-    // })
-    // .pipe(res);
   });
 
   apiRoutes.get("/auth/callback", (req, res) => {
