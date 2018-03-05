@@ -78,8 +78,7 @@ export default function({ app, User, config }) {
   apiRoutes.post("/file/list", function(req, res) {
     // '0B9tPYCpuqoIrflBJN01SZEFFcUJLS3FkYTktbXVPOUwyZFh6OGZRSmRnWXFYNGUxQk9iRzA' in parents
     const params = {
-      // pageSize: 3,
-      // alt: 'media',
+      pageSize: 2,
       q: "title contains '.mup'"
     };
 
@@ -92,7 +91,8 @@ export default function({ app, User, config }) {
       request
         .then(function(resp) {
           result = result.concat(resp.data.items);
-          var nextPageToken = resp.nextPageToken;
+          var nextPageToken = resp.data.nextPageToken;
+          resp.data.items.map(item=>console.log(item.title));
           if (nextPageToken) {
             request = getFiles(nextPageToken);
             retrievePageOfFiles(request, result, nextPageToken, callback);
@@ -106,7 +106,7 @@ export default function({ app, User, config }) {
     };
     function getFiles(nextPageToken) {
       if (nextPageToken) {
-        params.nextPageToken = nextPageToken;
+        params.pageToken = nextPageToken;
       }
       return new Promise((resolve, reject) => {
         drive.files.list(params, (err, result) => {
@@ -127,8 +127,6 @@ export default function({ app, User, config }) {
     // '0B9tPYCpuqoIrflBJN01SZEFFcUJLS3FkYTktbXVPOUwyZFh6OGZRSmRnWXFYNGUxQk9iRzA' in parents
     let fileName = req.body.fileName;
     const params = {
-      // pageSize: 3,
-      // alt: 'media',
       q: `title contains '${fileName}.mup'`
     };
 
@@ -141,8 +139,11 @@ export default function({ app, User, config }) {
       request
         .then(function(resp) {
           result = result.concat(resp.data.items);
-          var nextPageToken = resp.nextPageToken;
+          var nextPageToken = resp.data.nextPageToken;
+          console.log(nextPageToken);
           if (nextPageToken) {
+            console.log("NEXT PAGE!");
+            console.log(nextPageToken);
             request = getFiles(nextPageToken);
             retrievePageOfFiles(request, result, nextPageToken, callback);
           } else {
