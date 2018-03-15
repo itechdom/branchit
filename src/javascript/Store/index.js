@@ -13,7 +13,7 @@ export class Branchit {
   @observable isLoggedIn = false;
   @observable loading = false;
   @observable nodeEditOpen = false;
-  @observable nodeEdited = { title: "Hello", note:"TEXT" };
+  @observable nodeEdited = { title: "Hello", note: "TEXT" };
   @observable fileList = [];
   @observable filteredFileList = [];
   accessToken;
@@ -161,6 +161,63 @@ export class Branchit {
     );
   }
 
+  @action
+  addIdea(parent) {
+    let newIdea = {title:"new node"};
+    let newId;
+    if(Object.keys(parent.ideas).length > 0){
+      let lastKey = Object.keys(parent.ideas).slice(-1).pop();
+      newId = parseFloat(lastKey);
+    }
+    if(newId >= 0){
+      newId++;
+    }else if(newId < 0){
+      newId--;
+    }else{
+      newId = "0";
+    }
+    newIdea.id = newId;
+    newIdea.ideas = {};
+    let idea = new Idea(newIdea);
+    parent.ideas[`${newId}`] = new Idea(idea);
+    parent.visible = !parent.visible;
+  }
+
+  @action
+  removeIdea(parent,child){
+    Object.keys(parent.ideas).map(key=>{
+      if(parent.ideas[key] === child){
+        delete parent.ideas[key];
+      }
+    })
+  }
+
+  @action
+  editFile() {
+    this.pendingRequestCount++;
+    this.loading = true;
+    let token = this.getAccessToken();
+    let refresh_token = this.getRefreshToken();
+    let body = { token: token, refresh_token: refresh_token };
+    console.log(this.ideaList);
+    let req;
+    req = superagent.put(`${HOST}/google/file`);
+    req.send(body).end(
+      action("file-callback", (err, res) => {
+        if (err) {
+          console.log("err: ", err);
+        }
+        if (res.status === 401) {
+          console.log(err);
+          // this.login();
+        }
+        this.loading = false;
+        this.fileList.push(...res.body);
+        this.pendingRequestCount--;
+      })
+    );
+  }
+
   /**
    * Download a file's content.
    *
@@ -231,10 +288,11 @@ export class Idea {
     this.style = obj.style;
     this.visible = false;
     this.date = obj.date || moment();
+    this.rerender = false;
     if (obj.attr && obj.attr.note && obj.attr.note.text) {
       this.note = obj.attr.note.text;
     }
-    if(obj.attr && obj.attr.attachment && obj.attr.attachment.content){
+    if (obj.attr && obj.attr.attachment && obj.attr.attachment.content) {
       this.note = obj.attr.attachment.content;
     }
   }

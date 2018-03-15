@@ -37,12 +37,8 @@ export default class Home extends React.Component {
   };
 
   onNewRequest = title => {
-    this.props.branchitStore.filterFilesByTitle(title);
-    //download the file
+    // this.props.branchitStore.filterFilesByTitle(title);
     this.props.branchitStore.downloadFile();
-    this.props.branchitStore.download(data => {
-      console.log(data);
-    });
   };
 
   render() {
@@ -105,9 +101,16 @@ export default class Home extends React.Component {
             }}
             handleNodeEditClose={()=>{
               branchitStore.nodeEditedOpen = false;
+              //save whatever you want here
             }}
             handleNodeEditOpen={()=>{
               branchitStore.nodeEditedOpen = true;
+            }}
+            handleNodeAdd={node => {
+              //this the parent
+              console.log(branchitStore);
+              branchitStore.addIdea(node)
+              console.log("node parent",node);
             }}
           />
         </div>

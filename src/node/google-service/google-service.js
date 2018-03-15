@@ -79,7 +79,7 @@ export default function({ app, User, config }) {
     // '0B9tPYCpuqoIrflBJN01SZEFFcUJLS3FkYTktbXVPOUwyZFh6OGZRSmRnWXFYNGUxQk9iRzA' in parents
     const params = {
       pageSize: 2,
-      q: "title contains 'Formal' OR title contains 'Social' OR title contains 'Natural'"
+      q: "title contains 'Formal' OR title contains 'Social' OR title contains 'Natural' OR title contains 'Career'"
     };
 
     var retrievePageOfFiles = function(
@@ -92,7 +92,7 @@ export default function({ app, User, config }) {
         .then(function(resp) {
           result = result.concat(resp.data.items);
           var nextPageToken = resp.data.nextPageToken;
-          resp.data.items.map(item=>console.log(item.title));
+          // resp.data.items.map(item=>console.log(item.title));
           if (nextPageToken) {
             request = getFiles(nextPageToken);
             retrievePageOfFiles(request, result, nextPageToken, callback);

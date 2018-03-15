@@ -15,9 +15,14 @@ import {
 } from "material-ui";
 import React from "react";
 import { observer, Provider, inject } from "mobx-react";
+@observer
 export class Tree extends React.Component {
   constructor(props) {
     super(props);
+  }
+
+  addNode(){
+
   }
 
   renderNode(node, level, visibleLevel, key) {
@@ -35,6 +40,7 @@ export class Tree extends React.Component {
               hasNote={!!node.note}
               handleNodeToggle={() => this.props.handleNodeToggle(node)}
               handleNodeEdit={() => this.props.handleNodeEdit(node)}
+              handleNodeAdd={() => this.props.handleNodeAdd(node)}
               hasChildren={true}
             />
           ) : (
@@ -65,6 +71,7 @@ export class Tree extends React.Component {
           visible={node.visible}
           handleNodeToggle={() => this.props.handleNodeToggle(node)}
           handleNodeEdit={() => this.props.handleNodeEdit(node)}
+          handleNodeAdd={() => this.props.handleNodeAdd(node)}
           hasChildren={false}
         />
       );
@@ -96,7 +103,7 @@ export class Tree extends React.Component {
     );
   }
 }
-
+@observer
 export class Node extends React.Component {
   constructor(props) {
     super(props);
@@ -141,15 +148,19 @@ export class Node extends React.Component {
             {this.props.title}
           </a>
         )}
-        {
-          (this.props.hasNote)?
+        {this.props.hasNote ? (
           <IconButton className="pull-right">
             <FontIcon className="material-icons">note</FontIcon>
-          </IconButton>:""
-        }
+          </IconButton>
+        ) : (
+          ""
+        )}
         <IconButton onClick={this.props.handleNodeEdit} className="pull-right">
           <FontIcon className="material-icons">create</FontIcon>
         </IconButton>
+        <FlatButton secondary onClick={this.props.handleNodeAdd} className="pull-right">
+          +
+         </FlatButton>
       </ListItem>
     );
   }
@@ -186,7 +197,9 @@ export class NodeEditDialog extends React.Component {
           onRequestClose={this.handleClose}
           autoScrollBodyContent={true}
         >
-          {branchitStore.nodeEdited.note}
+          <p
+            dangerouslySetInnerHTML={{ __html: branchitStore.nodeEdited.note }}
+          />
         </Dialog>
       </div>
     );
