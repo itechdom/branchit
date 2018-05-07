@@ -14,16 +14,26 @@ import {
   Dialog
 } from "material-ui";
 import React from "react";
+import {
+  CSSTransition,
+  TransitionGroup,
+  Transition
+} from "react-transition-group";
 import { observer, Provider, inject } from "mobx-react";
 @observer
 export class Tree extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      in: false
+    };
   }
 
-  addNode(){
+  toggleEnterState = () => {
+    this.setState({ in: !this.state.in });
+  };
 
-  }
+  addNode() {}
 
   renderNode(node, level, visibleLevel, key) {
     level++;
@@ -33,16 +43,26 @@ export class Tree extends React.Component {
       return (
         <div>
           {visible ? (
-            <Node
-              key={key}
-              title={node.title}
-              visible={node.visible}
-              hasNote={!!node.note}
-              handleNodeToggle={() => this.props.handleNodeToggle(node)}
-              handleNodeEdit={() => this.props.handleNodeEdit(node)}
-              handleNodeAdd={() => this.props.handleNodeAdd(node)}
-              hasChildren={true}
-            />
+            <TransitionGroup>
+              <Transition key={key} timeout={300}>
+                {status => (
+                  <div>
+                    {status}
+                    <Node
+                      className={`fade fade-${status}`}
+                      key={key}
+                      title={node.title}
+                      visible={node.visible}
+                      hasNote={!!node.note}
+                      handleNodeToggle={() => this.props.handleNodeToggle(node)}
+                      handleNodeEdit={() => this.props.handleNodeEdit(node)}
+                      handleNodeAdd={() => this.props.handleNodeAdd(node)}
+                      hasChildren={true}
+                    />
+                  </div>
+                )}
+              </Transition>
+            </TransitionGroup>
           ) : (
             ""
           )}
@@ -158,9 +178,13 @@ export class Node extends React.Component {
         <IconButton onClick={this.props.handleNodeEdit} className="pull-right">
           <FontIcon className="material-icons">create</FontIcon>
         </IconButton>
-        <FlatButton secondary onClick={this.props.handleNodeAdd} className="pull-right">
+        <FlatButton
+          secondary
+          onClick={this.props.handleNodeAdd}
+          className="pull-right"
+        >
           +
-         </FlatButton>
+        </FlatButton>
       </ListItem>
     );
   }

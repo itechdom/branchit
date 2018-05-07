@@ -180,7 +180,13 @@ export class Branchit {
     newIdea.ideas = {};
     let idea = new Idea(newIdea);
     parent.ideas[`${newId}`] = new Idea(idea);
-    parent.visible = !parent.visible;
+    parent.visible = true;
+    if(parent.visible){
+      parent.visible = false;
+      setTimeout(()=>{
+        parent.visible = true;
+      })
+    }
   }
 
   @action

@@ -26,6 +26,9 @@ import { observer, Provider, inject } from "mobx-react";
 export default class Home extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      in: false
+    };
   }
 
   handleUpdateInput = title => {
@@ -40,6 +43,8 @@ export default class Home extends React.Component {
     // this.props.branchitStore.filterFilesByTitle(title);
     this.props.branchitStore.downloadFile();
   };
+
+
 
   render() {
     let {
@@ -99,18 +104,18 @@ export default class Home extends React.Component {
               branchitStore.nodeEdited = node;
               branchitStore.nodeEditOpen = true;
             }}
-            handleNodeEditClose={()=>{
+            handleNodeEditClose={() => {
               branchitStore.nodeEditedOpen = false;
               //save whatever you want here
             }}
-            handleNodeEditOpen={()=>{
+            handleNodeEditOpen={() => {
               branchitStore.nodeEditedOpen = true;
             }}
             handleNodeAdd={node => {
               //this the parent
               console.log(branchitStore);
-              branchitStore.addIdea(node)
-              console.log("node parent",node);
+              branchitStore.addIdea(node);
+              console.log("node parent", node);
             }}
           />
         </div>
