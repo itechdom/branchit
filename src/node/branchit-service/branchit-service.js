@@ -11,5 +11,10 @@ export default function auth({ app, Idea }) {
     res.send("Hello! Hello service is working");
   });
   apiRoutes.get("/populate-db", function(req, res) {});
+  //add idea
+  apiRoutes.post("idea",()=>{});
+  //if a specific idea title is specified, search all my knowledge for it?
+  apiRoutes.get("idea",(req,res)=>{});
+  apiRoutes.delete("idea",(req,res)=>{});
   return apiRoutes;
 }
