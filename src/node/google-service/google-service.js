@@ -50,6 +50,8 @@ export default function({ app, User, config }) {
   apiRoutes.get("/error", function(req, res) {
     res.status(401).send({ message: "Error Logging In!" });
   });
+  //sync with google bookamarks
+  apiRoutes.post("sync")
 
   apiRoutes.get("/auth", function(req, res) {
     // generate a url that asks permissions for Google+ and Google Calendar scopes
